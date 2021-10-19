@@ -9,10 +9,12 @@ namespace inzLessons.Client.Services
     public interface ILoginServices
     {
         public void UserLogin(LoginParam param);
+        public void RegisterUser();
     }
 
     public class LoginServices : ILoginServices
     {
+        public void RegisterUser() { }
         public void UserLogin(LoginParam param) { }
     }
 }
