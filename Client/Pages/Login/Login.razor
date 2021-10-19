@@ -1,16 +1,22 @@
-﻿@using Radzen.Blazor;
+﻿@page "/login"
+
+@using Radzen.Blazor;
 @using inzLessons.Client.Pages.Login;
 
-@page "/login"
+@inject NavigationManager NavigationManager
 
 <div class="row">
     <div class="col">
         <h5>Login</h5>
-        <RadzenTextBox @bind-Value="_login.Username" Placeholder="Wprowadź login..." />
+        <RadzenTextBox @bind-Value="_login.Username" Placeholder="Nazwa użytkownika..." />
         <h5 style="margin-top: 2rem">Hasło</h5>
         <RadzenPassword Placeholder="Wprowadź hasło...." @bind-Value="_login.Password" />
+        <br />
         <RadzenButton Click="LoginAction" Text="Zaloguj się" Style="margin-bottom: 20px; width: 150px" />
 
+    </div>
+    <div class="col">
+        <RadzenButton Click="NavigateToRegister" Text="Nowy użytkownik" Style="margin-bottom: 20px; width: 150px" />
     </div>
 </div>
 @code {

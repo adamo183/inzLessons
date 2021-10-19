@@ -8,11 +8,11 @@ namespace inzLessons.Client.Services
 {
     public interface ILoginServices
     {
-        public void UserLogin(LoginParam param);
+        public void UserLogin(LoginRequest param);
     }
 
     public class LoginServices : ILoginServices
     {
-        public void UserLogin(LoginParam param) { }
+        public void UserLogin(LoginRequest param) { }
     }
 }

@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Common.DAL.Model
+#nullable disable
+
+namespace inzLessons.Common.Models
 {
-    public class Users
+    public partial class Users
     {
         public int Id { get; set; }
         public string Firstname { get; set; }
@@ -16,6 +18,7 @@ namespace Common.DAL.Model
         public DateTime Createdate { get; set; }
         public int? RoleId { get; set; }
         public int? MembershipId { get; set; }
+        public string Username { get; set; }
 
         public virtual Membership Membership { get; set; }
         public virtual Role Role { get; set; }

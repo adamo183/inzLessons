@@ -2,13 +2,13 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Common.DAL.Model;
+using inzLessons.Common.Models;
 
 #nullable disable
 
-namespace Common.DAL.Context
+namespace inzLessons.Common.Context
 {
-    public class InzlessonsdbContext : DbContext
+    public partial class InzlessonsdbContext : DbContext
     {
         public InzlessonsdbContext()
         {
@@ -28,7 +28,7 @@ namespace Common.DAL.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlite("Data Source=LAPTOP-LKBFME05\\SQLEXPRESS;Initial Catalog=inzLessonsDB;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=LAPTOP-LKBFME05\\SQLEXPRESS;Initial Catalog=inzLessonsDB;Integrated Security=True");
             }
         }
 
@@ -114,6 +114,11 @@ namespace Common.DAL.Context
 
                 entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
 
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.Membership)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.MembershipId)
@@ -125,9 +130,9 @@ namespace Common.DAL.Context
                     .HasConstraintName("FK_USERS_ROLE");
             });
 
-            //OnModelCreatingPartial(modelBuilder);
+            OnModelCreatingPartial(modelBuilder);
         }
 
-        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

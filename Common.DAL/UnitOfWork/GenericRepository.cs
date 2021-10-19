@@ -1,5 +1,5 @@
-﻿using Common.DAL.Context;
-using Common.DAL.Model;
+﻿using inzLessons.Common.Context;
+using inzLessons.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

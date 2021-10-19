@@ -8,7 +8,7 @@ namespace inzLessons.Client.Pages.Login
 {
     public partial class Login
     {
-        private LoginParam _login = new LoginParam();
+        private LoginRequest _login = new LoginRequest();
 
         protected override async Task OnInitializedAsync()
         {
@@ -16,6 +16,11 @@ namespace inzLessons.Client.Pages.Login
 
         private void LoginAction()
         {
+        }
+
+        private void NavigateToRegister()
+        {
+            NavigationManager.NavigateTo("/register");
         }
     }
 }

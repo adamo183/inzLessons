@@ -1,6 +1,7 @@
 ﻿using inzLessons.Server.Services;
 using inzLessons.Shared;
 using inzLessons.Shared.Login;
+using inzLessons.Shared.Register;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,8 +30,14 @@ namespace inzLessons.Server.Controllers
             _userService = userService;
         }
 
+        [HttpPost("register")]
+        public IActionResult RegisterUser(RegisterRequest registerRequest)
+        {
+            return Ok();
+        }
+
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(LoginResponse model)
+        public IActionResult Authenticate(LoginRequest model)
         {
             var response = _userService.Authenticate(model);
 

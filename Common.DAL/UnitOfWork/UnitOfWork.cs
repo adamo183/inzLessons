@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Linq.Expressions;
-using Common.DAL.Context;
+using inzLessons.Common.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.DAL.UnitOfWork

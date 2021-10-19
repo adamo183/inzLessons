@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Common.DAL.Model
+namespace inzLessons.Common.Models
 {
-    public class Membership
+    public partial class Membership
     {
         public Membership()
         {
