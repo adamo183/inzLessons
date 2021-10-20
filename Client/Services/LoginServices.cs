@@ -2,19 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace inzLessons.Client.Services
 {
+using System.Threading.Tasks;
     public interface ILoginServices
     {
-        public void UserLogin(LoginParam param);
+        public void UserLogin(LoginRequest param);
         public void RegisterUser();
     }
 
     public class LoginServices : ILoginServices
     {
         public void RegisterUser() { }
-        public void UserLogin(LoginParam param) { }
+        public void UserLogin(LoginRequest param) { }
     }
 }

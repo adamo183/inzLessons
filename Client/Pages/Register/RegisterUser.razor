@@ -1,0 +1,37 @@
+﻿@page "/register"
+
+@inject NavigationManager NavigationManager
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="row" style="margin-bottom:20px">
+            <div class="col-4">
+                Login
+            </div>
+            <div class="col-4">
+                <RadzenTextBox @bind-Value="_registerRequest.Login" />
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:20px">
+            <div class="col-4">
+                Hasło
+            </div>
+            <div class="col-4">
+                <RadzenPassword @bind-Value="_registerRequest.Password" />
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:20px">
+            <div class="col-4">
+                Powtórz hasło
+            </div>
+            <div class="col-4">
+                <RadzenPassword @bind-Value="_registerRequest.Password" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+
+}

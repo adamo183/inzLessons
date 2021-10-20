@@ -12,11 +12,10 @@
         <h5 style="margin-top: 2rem">Hasło</h5>
         <RadzenPassword Placeholder="Wprowadź hasło...." @bind-Value="_login.Password" />
         <br />
-        <RadzenButton Click="LoginAction" Text="Zaloguj się" Style="margin-bottom: 20px; width: 150px" />
+        <RadzenButton Click="LoginAction" Text="Zaloguj się" Style="margin-bottom: 20px; width: 150px; margin-top:20px" />
 
-    </div>
-    <div class="col">
-        <RadzenButton Click="NavigateToRegister" Text="Nowy użytkownik" Style="margin-bottom: 20px; width: 150px" />
+
+        <RadzenButton Click="NavigateToRegister" Text="Załóż konto" Style="margin-bottom: 20px; width: 150px; margin-top: 100px" />
     </div>
 </div>
 @code {
