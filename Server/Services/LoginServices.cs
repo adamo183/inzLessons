@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using inzLessons.Common.Models;
+using System.Security.Cryptography;
 
 namespace inzLessons.Server.Services
 {
@@ -18,23 +19,61 @@ namespace inzLessons.Server.Services
         string GenerateJwtToken(Users user);
         LoginResponse Authenticate(LoginRequest model);
         Users GetById(int id);
+        public string GenerateSalt(int nSalt);
+        public string HashPassword(string password, string salt, int nIterations, int nHash);
+        public void InsertMembership(Membership membership);
+        public void InsertUser(Users user);
     }
 
     public class LoginServices : ILoginServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
 
+        public void InsertUser(Users user)
+        {
+            _unitOfWork.UsersRepository.Insert(user);
+            _unitOfWork.Save();
+        }
+
+        public void InsertMembership(Membership membership)
+        {
+            _unitOfWork.MembershipRepository.Insert(membership);
+            _unitOfWork.Save();
+        }
+
+        public string HashPassword(string password, string salt, int nIterations, int nHash)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+
+            using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, nIterations))
+            {
+                return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
+            }
+        }
+
+        public string GenerateSalt(int nSalt)
+        {
+            var saltBytes = new byte[nSalt];
+
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                provider.GetNonZeroBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
+        }
+
         public LoginResponse Authenticate(LoginRequest model)
         {
             var membership = _unitOfWork.MembershipRepository.Get(x => x.Login == model.Username && model.Password == x.Password).FirstOrDefault();
 
-            if (membership == null) 
+            if (membership == null)
                 return null;
 
             var user = _unitOfWork.UsersRepository.Get(x => x.MembershipId == membership.Id).FirstOrDefault();
             var token = GenerateJwtToken(user);
 
-            return new LoginResponse() { Id = user.Id, FirstName = user.Firstname, LastName = user.Lastname, Username = user.Username, Token = token } ;
+            return new LoginResponse() { Id = user.Id, FirstName = user.Firstname, LastName = user.Lastname, Username = user.Username, Token = token };
         }
 
         public string GenerateJwtToken(Users user)

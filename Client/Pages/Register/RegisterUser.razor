@@ -1,36 +1,106 @@
 ﻿@page "/register"
 
-@inject NavigationManager NavigationManager
+@using inzLessons.Shared.Register;
+@using inzLessons.Client.Services; 
 
-<div class="row">
-    <div class="col-xl-6">
-        <div class="row" style="margin-bottom:20px">
-            <div class="col-4">
-                Login
+@inject NavigationManager NavigationManager
+@inject ILoginServices _loginServices
+
+<RadzenTemplateForm TItem="RegisterRequest" Data=@_registerRequest Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Login
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.Login" Name="LoginComp" />
+                    <RadzenRequiredValidator Component="LoginComp" Text="Login wymagany" Popup=@popup Style="position: absolute" />
+                </div>
             </div>
-            <div class="col-4">
-                <RadzenTextBox @bind-Value="_registerRequest.Login" />
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Hasło
+                </div>
+                <div class="col-4">
+                    <RadzenPassword @bind-Value="_registerRequest.Password" Name="Password" />
+                    <RadzenRequiredValidator Component="Password" Text="Wprowadź hasło" Popup="@popup" Style="position: absolute" />
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Powtórz hasło
+                </div>
+                <div class="col-4">
+                    <RadzenPassword @bind-Value="_repeatPassword" Name="RepeatPassword" />
+                    <RadzenRequiredValidator Component="RepeatPassword" Text="Repeat your password" Popup=@popup Style="position: absolute" Name="RepeatPassword" />
+                    <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(_repeatPassword)) Value=@_registerRequest.Password Component="RepeatPassword" Text="Hasła nie są takie same" Popup=@popup Style="position: absolute" />
+                </div>
+            </div>
+            <div>
+                <RadzenRadioButtonList @bind-Value=@value TValue="int">
+                    <Items>
+                        <RadzenRadioButtonListItem Text="Student" Value="1" />
+                        <RadzenRadioButtonListItem Text="Nauczyciel" Value="2" />
+                    </Items>
+                </RadzenRadioButtonList>
+            </div>
+
+            <div class="row" style="margin-bottom:20px;margin-top:150px">
+                <div class="col-4">
+                    <RadzenButton ButtonType="ButtonType.Submit" @onclick="SendAccount" Text="Wyślij" />
+                </div>
             </div>
         </div>
-        <div class="row" style="margin-bottom:20px">
-            <div class="col-4">
-                Hasło
+        <div class="col-xl-6">
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Imię
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.Firstname" Name="FirstName" />
+                    <RadzenRequiredValidator Component="FirstName" Text="Imie jest wymagane" Popup="@popup" Style="position: absolute" />
+                </div>
             </div>
-            <div class="col-4">
-                <RadzenPassword @bind-Value="_registerRequest.Password" />
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Nazwisko
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.Lastname" Name="Lastname" />
+                    <RadzenRequiredValidator Component="Lastname" Text="Nazwisko jest wymagane" Popup="@popup" Style="position: absolute" />
+                </div>
             </div>
-        </div>
-        <div class="row" style="margin-bottom:20px">
-            <div class="col-4">
-                Powtórz hasło
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Telefon
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.Phone" Name="Phone" />
+                    <RadzenRequiredValidator Component="Phone" Text="Telefon jest wymagany" Popup="@popup" Style="position: absolute" />
+                </div>
             </div>
-            <div class="col-4">
-                <RadzenPassword @bind-Value="_registerRequest.Password" />
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Miasto
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.City" Name="City"/>
+                    <RadzenRequiredValidator Component="City" Text="Miasto jest wymagane" Popup="@popup" Style="position: absolute" />
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-4">
+                    Email
+                </div>
+                <div class="col-4">
+                    <RadzenTextBox @bind-Value="_registerRequest.Email" Name="Email" />
+                    <RadzenRequiredValidator Component="Email" Text="Email jest wymagany" Popup="@popup" Style="position: absolute" />
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+</RadzenTemplateForm>
 @code
 {
 

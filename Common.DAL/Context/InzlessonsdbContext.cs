@@ -19,8 +19,10 @@ namespace inzLessons.Common.Context
         {
         }
 
+        public virtual DbSet<Lessonsgroup> Lessonsgroup { get; set; }
         public virtual DbSet<Membership> Membership { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Useringroup> Useringroup { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,106 +30,128 @@ namespace inzLessons.Common.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=LAPTOP-LKBFME05\\SQLEXPRESS;Initial Catalog=inzLessonsDB;Integrated Security=True");
+                optionsBuilder.UseNpgsql("Password=testPass123;Username=35223954_inzdb;Database=35223954_inzdb;Host=serwer2148690.home.pl");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Polish_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "pl_PL.utf8");
+
+            modelBuilder.Entity<Lessonsgroup>(entity =>
+            {
+                entity.ToTable("lessonsgroup");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Creationdate).HasColumnName("creationdate");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+            });
 
             modelBuilder.Entity<Membership>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.ToTable("membership");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Login)
                     .IsRequired()
                     .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("LOGIN");
+                    .HasColumnName("login");
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("PASSWORD");
+                    .HasMaxLength(256)
+                    .HasColumnName("password");
 
                 entity.Property(e => e.PasswordSalt)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("PASSWORD_SALT");
+                    .HasMaxLength(256)
+                    .HasColumnName("password_salt");
             });
 
             modelBuilder.Entity<Role>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.ToTable("role");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasColumnName("NAME");
+                    .HasMaxLength(30)
+                    .HasColumnName("name");
+            });
+
+            modelBuilder.Entity<Useringroup>(entity =>
+            {
+                entity.HasKey(e => new { e.Userid, e.Groupid })
+                    .HasName("useringroup_pkey");
+
+                entity.ToTable("useringroup");
+
+                entity.Property(e => e.Userid).HasColumnName("userid");
+
+                entity.Property(e => e.Groupid).HasColumnName("groupid");
             });
 
             modelBuilder.Entity<Users>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.ToTable("users");
 
-                entity.Property(e => e.Adress)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("ADRESS");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.City)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("CITY");
+                    .HasColumnName("city");
 
-                entity.Property(e => e.Createdate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("CREATEDATE");
+                entity.Property(e => e.Createdate).HasColumnName("createdate");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("EMAIL");
+                    .HasColumnName("email");
 
                 entity.Property(e => e.Firstname)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("FIRSTNAME");
+                    .HasColumnName("firstname");
 
                 entity.Property(e => e.Lastname)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("LASTNAME");
+                    .HasColumnName("lastname");
 
-                entity.Property(e => e.MembershipId).HasColumnName("MEMBERSHIP_ID");
+                entity.Property(e => e.MembershipId).HasColumnName("membership_id");
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("PHONE");
+                    .HasColumnName("phone");
 
-                entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
+                entity.Property(e => e.RoleId).HasColumnName("role_id");
 
                 entity.Property(e => e.Username)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasColumnName("username");
 
                 entity.HasOne(d => d.Membership)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.MembershipId)
-                    .HasConstraintName("FK_USERS_MEMBERSHIP");
+                    .HasConstraintName("fk_membership_users");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_USERS_ROLE");
+                    .HasConstraintName("fk_role_users");
             });
 
             OnModelCreatingPartial(modelBuilder);

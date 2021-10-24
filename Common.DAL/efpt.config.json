@@ -14,19 +14,27 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "[dbo].[Membership]",
+         "Name": "public.useringroup",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Role]",
+         "Name": "public.role",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Users]",
+         "Name": "public.users",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.membership",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.lessonsgroup",
          "ObjectType": 0
       }
    ],
-   "UiHint": "LAPTOP-LKBFME05\\SQLEXPRESS.inzLessonsDB",
+   "UiHint": ".35223954_inzdb",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
    "UseDbContextSplitting": false,

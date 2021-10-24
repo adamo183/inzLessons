@@ -5,21 +5,35 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace inzLessons.Client.Services
 {
     public class AuthServices : AuthenticationStateProvider
     {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            var identity = new ClaimsIdentity(new[]
-        {
-            new Claim(ClaimTypes.Name, "mrfibuli"),
-        }, "Fake authentication type");
+        private readonly ILocalStorageService _localStorage;
+        private readonly HttpClient _httpClient;
 
-            var user = new ClaimsPrincipal(identity);
+        public AuthServices(ILocalStorageService storageService, HttpClient httpClient)
+        {
+            _localStorage = storageService;
+            _httpClient = httpClient;
+        }
 
-            return Task.FromResult(new AuthenticationState(user));
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var savedToken = await _localStorage.GetItemAsync<string>("authToken");
+
+            if (string.IsNullOrWhiteSpace(savedToken))
+            {
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            }
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
+
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt")));
         }
 
         public void NotifyUserAuthentication(string token)

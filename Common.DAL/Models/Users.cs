@@ -12,7 +12,6 @@ namespace inzLessons.Common.Models
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
-        public string Adress { get; set; }
         public string City { get; set; }
         public string Phone { get; set; }
         public DateTime Createdate { get; set; }
