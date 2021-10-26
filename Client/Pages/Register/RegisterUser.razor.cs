@@ -27,6 +27,10 @@ namespace inzLessons.Client.Pages.Register
 
         async void OnSubmit(RegisterRequest registerRequest)
         {
+            bool isUsernameInDB = await _loginServices.CheckUsername(registerRequest.Login);
+            if (isUsernameInDB)
+                return;
+
             await _loginServices.RegisterUser(_registerRequest);
         }
 

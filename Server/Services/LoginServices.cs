@@ -23,11 +23,21 @@ namespace inzLessons.Server.Services
         public string HashPassword(string password, string salt, int nIterations, int nHash);
         public void InsertMembership(Membership membership);
         public void InsertUser(Users user);
+        public bool CheckUsername(string username);
     }
 
     public class LoginServices : ILoginServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public bool CheckUsername(string username)
+        {
+            var check = _unitOfWork.UsersRepository.Get(x => x.Username == username).FirstOrDefault();
+            if (check == null)
+                return false;
+
+            return true;
+        }
 
         public void InsertUser(Users user)
         {

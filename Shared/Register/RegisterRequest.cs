@@ -17,6 +17,17 @@ namespace inzLessons.Shared.Register
         public string Lastname { get; set; }
         public string City { get; set; }
         public string Phone { get; set; }
-        public RoleEnum Role { get; set; }
+        public int Role { 
+            get
+            {
+                return (int)_role;
+            }
+            set 
+            {
+                _role = (RoleEnum)value;
+            }
+        }
+
+        private RoleEnum _role = RoleEnum.Student;
     }
 }

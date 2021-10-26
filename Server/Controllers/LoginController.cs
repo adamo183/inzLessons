@@ -45,22 +45,30 @@ namespace inzLessons.Server.Controllers
             users.Lastname = registerRequest.Lastname;
             users.MembershipId = membToAdd.Id;
             users.Phone = registerRequest.Phone;
-            users.RoleId = 1;
+            users.RoleId = registerRequest.Role;
             users.Username = registerRequest.Login;
             _userService.InsertUser(users);
 
             return Ok();
         }
 
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate(LoginRequest model)
+        //[HttpPost("authenticate")]
+        //public IActionResult Authenticate(LoginRequest model)
+        //{
+        //    var response = _userService.Authenticate(model);
+
+        //    if (response == null)
+        //        return BadRequest(new { message = "Username or password is incorrect" });
+
+        //    return Ok(response);
+        //}
+
+        [AllowAnonymous]
+        [HttpGet("CheckUserName/{userName}")]
+        public IActionResult CheckUsername([FromQuery(Name = "usernName")] string userName)
         {
-            //var response = _userService.Authenticate(model);
-
-            //if (response == null)
-            //    return BadRequest(new { message = "Username or password is incorrect" });
-
-            //return Ok(response);
+            //bool tmp = _userService.CheckUsername(userName);
+            //return Ok(tmp);
             return Ok();
         }
     }

@@ -15,6 +15,7 @@ namespace inzLessons.Client.Services
     {
         public Task<LoginResponse> UserLogin(LoginRequest param);
         public Task<bool> RegisterUser(RegisterRequest register);
+        public Task<bool> CheckUsername(string username);
     }
 
     public class LoginServices : ILoginServices
@@ -24,6 +25,18 @@ namespace inzLessons.Client.Services
         public LoginServices(HttpClient http)
         {
             _http = http;
+        }
+
+        public async Task<bool> CheckUsername(string username)
+        {
+            var respond = await _http.GetAsync("CheckUserName/"+username);
+            if (!respond.IsSuccessStatusCode)
+                return true;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return Convert.ToBoolean(retElem);
+            }
         }
 
         public async Task<bool> RegisterUser(RegisterRequest register) 
