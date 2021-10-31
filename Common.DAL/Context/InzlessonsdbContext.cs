@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using inzLessons.Common.Models;
 
-#nullable disable
-
 namespace inzLessons.Common.Context
 {
     public partial class InzlessonsdbContext : DbContext
@@ -19,8 +17,11 @@ namespace inzLessons.Common.Context
         {
         }
 
+        public virtual DbSet<Allowedreservation> Allowedreservation { get; set; }
+        public virtual DbSet<Lessoncondition> Lessoncondition { get; set; }
         public virtual DbSet<Lessonsgroup> Lessonsgroup { get; set; }
         public virtual DbSet<Membership> Membership { get; set; }
+        public virtual DbSet<Reservation> Reservation { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Useringroup> Useringroup { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -29,14 +30,58 @@ namespace inzLessons.Common.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseNpgsql("Password=testPass123;Username=35223954_inzdb;Database=35223954_inzdb;Host=serwer2148690.home.pl");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "pl_PL.utf8");
+            modelBuilder.Entity<Allowedreservation>(entity =>
+            {
+                entity.ToTable("allowedreservation");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Groupid).HasColumnName("groupid");
+
+                entity.Property(e => e.Reservationdateend).HasColumnName("reservationdateend");
+
+                entity.Property(e => e.Reservationdatestart).HasColumnName("reservationdatestart");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.Allowedreservation)
+                    .HasForeignKey(d => d.Groupid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_allowedreservation_group");
+            });
+
+            modelBuilder.Entity<Lessoncondition>(entity =>
+            {
+                entity.ToTable("lessoncondition");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Allowedhourinweek).HasColumnName("allowedhourinweek");
+
+                entity.Property(e => e.Configname)
+                    .HasColumnName("configname")
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Price).HasColumnName("price");
+
+                entity.Property(e => e.Teacherid).HasColumnName("teacherid");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.Lessoncondition)
+                    .HasForeignKey(d => d.Teacherid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users_lessonscondition");
+            });
 
             modelBuilder.Entity<Lessonsgroup>(entity =>
             {
@@ -50,8 +95,16 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
+                    .HasColumnName("name")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Teacherid).HasColumnName("teacherid");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.Lessonsgroup)
+                    .HasForeignKey(d => d.Teacherid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_lessonsgroup_users");
             });
 
             modelBuilder.Entity<Membership>(entity =>
@@ -64,16 +117,33 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Login)
                     .IsRequired()
-                    .HasMaxLength(30)
-                    .HasColumnName("login");
+                    .HasColumnName("login")
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(256)
-                    .HasColumnName("password");
+                    .HasColumnName("password")
+                    .HasMaxLength(256);
 
                 entity.Property(e => e.PasswordSalt)
-                    .HasMaxLength(256)
-                    .HasColumnName("password_salt");
+                    .HasColumnName("password_salt")
+                    .HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<Reservation>(entity =>
+            {
+                entity.ToTable("reservation");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Groupid).HasColumnName("groupid");
+
+                entity.Property(e => e.Isonline).HasColumnName("isonline");
+
+                entity.Property(e => e.Reservationdate).HasColumnName("reservationdate");
+
+                entity.Property(e => e.Userid).HasColumnName("userid");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -86,8 +156,8 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(30)
-                    .HasColumnName("name");
+                    .HasColumnName("name")
+                    .HasMaxLength(30);
             });
 
             modelBuilder.Entity<Useringroup>(entity =>
@@ -100,6 +170,26 @@ namespace inzLessons.Common.Context
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
                 entity.Property(e => e.Groupid).HasColumnName("groupid");
+
+                entity.Property(e => e.Condidionid).HasColumnName("condidionid");
+
+                entity.HasOne(d => d.Condidion)
+                    .WithMany(p => p.Useringroup)
+                    .HasForeignKey(d => d.Condidionid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_condition_useringroup");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.Useringroup)
+                    .HasForeignKey(d => d.Groupid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_group_useringroup");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Useringroup)
+                    .HasForeignKey(d => d.Userid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users_useringroup");
             });
 
             modelBuilder.Entity<Users>(entity =>
@@ -108,45 +198,45 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
+                    .ValueGeneratedOnAdd()
                     .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.City)
-                    .HasMaxLength(100)
-                    .HasColumnName("city");
+                    .HasColumnName("city")
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Createdate).HasColumnName("createdate");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .HasColumnName("email");
+                    .HasColumnName("email")
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Firstname)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("firstname");
+                    .HasColumnName("firstname")
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Lastname)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("lastname");
-
-                entity.Property(e => e.MembershipId).HasColumnName("membership_id");
+                    .HasColumnName("lastname")
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Phone)
-                    .HasMaxLength(20)
-                    .HasColumnName("phone");
+                    .HasColumnName("phone")
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
                 entity.Property(e => e.Username)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("username");
+                    .HasColumnName("username")
+                    .HasMaxLength(50);
 
-                entity.HasOne(d => d.Membership)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.MembershipId)
-                    .HasConstraintName("fk_membership_users");
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Users)
+                    .HasForeignKey<Users>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_users_membership");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)

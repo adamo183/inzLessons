@@ -21,6 +21,7 @@ namespace inzLessons.Server.Services
         Users GetById(int id);
         public string GenerateSalt(int nSalt);
         public string HashPassword(string password, string salt, int nIterations, int nHash);
+        public string GetUserHash(string userName);
         public void InsertMembership(Membership membership);
         public void InsertUser(Users user);
         public bool CheckUsername(string username);
@@ -29,6 +30,15 @@ namespace inzLessons.Server.Services
     public class LoginServices : ILoginServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public string GetUserHash(string login)
+        {
+            var hashToRet = _unitOfWork.MembershipRepository.Get(x => x.Login == login).FirstOrDefault();
+            if (hashToRet != null)
+                return hashToRet.PasswordSalt;
+
+            return null;
+        }
 
         public bool CheckUsername(string username)
         {
@@ -80,10 +90,10 @@ namespace inzLessons.Server.Services
             if (membership == null)
                 return null;
 
-            var user = _unitOfWork.UsersRepository.Get(x => x.MembershipId == membership.Id).FirstOrDefault();
+            var user = _unitOfWork.UsersRepository.Get(x => x.Id == membership.Id).FirstOrDefault();
             var token = GenerateJwtToken(user);
 
-            return new LoginResponse() { Id = user.Id, FirstName = user.Firstname, LastName = user.Lastname, Username = user.Username, Token = token };
+            return new LoginResponse() { Id = user.Id, FirstName = user.Firstname, LastName = user.Lastname, Username = user.Username, Token = token, Role = (Shared.Role.RoleEnum)user.RoleId.Value };
         }
 
         public string GenerateJwtToken(Users user)

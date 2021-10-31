@@ -32,6 +32,7 @@ namespace inzLessons.Client.Pages.Register
                 return;
 
             await _loginServices.RegisterUser(_registerRequest);
+            NavigationManager.NavigateTo("/login");
         }
 
         void OnInvalidSubmit(FormInvalidSubmitEventArgs args)

@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 namespace inzLessons.Common.Models
 {
-    public partial class Lessonsgroup
+    public partial class Lessoncondition
     {
-        public Lessonsgroup()
+        public Lessoncondition()
         {
-            Allowedreservation = new HashSet<Allowedreservation>();
             Useringroup = new HashSet<Useringroup>();
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime? Creationdate { get; set; }
+        public int? Allowedhourinweek { get; set; }
+        public float? Price { get; set; }
+        public string Configname { get; set; }
         public int Teacherid { get; set; }
 
         public virtual Users Teacher { get; set; }
-        public virtual ICollection<Allowedreservation> Allowedreservation { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

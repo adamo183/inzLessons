@@ -1,5 +1,4 @@
 ﻿{
-   "CodeGenerationMode": 0,
    "ContextClassName": "InzlessonsdbContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
@@ -14,40 +13,45 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "public.useringroup",
-         "ObjectType": 0
+         "HasPrimaryKey": true,
+         "Name": "public.allowedreservation"
       },
       {
-         "Name": "public.role",
-         "ObjectType": 0
+         "HasPrimaryKey": true,
+         "Name": "public.lessoncondition"
       },
       {
-         "Name": "public.users",
-         "ObjectType": 0
+         "HasPrimaryKey": true,
+         "Name": "public.lessonsgroup"
       },
       {
-         "Name": "public.membership",
-         "ObjectType": 0
+         "HasPrimaryKey": true,
+         "Name": "public.membership"
       },
       {
-         "Name": "public.lessonsgroup",
-         "ObjectType": 0
+         "HasPrimaryKey": true,
+         "Name": "public.reservation"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "public.role"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "public.useringroup"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "public.users"
       }
    ],
-   "UiHint": ".35223954_inzdb",
-   "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
    "UseDbContextSplitting": false,
    "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseInflector": false,
    "UseLegacyPluralizer": false,
-   "UseNoConstructor": false,
-   "UseNoDefaultConstructor": false,
-   "UseNoNavigations": false,
-   "UseNoObjectFilter": false,
    "UseNodaTime": false,
-   "UseNullableReferences": false,
-   "UseSchemaFolders": false,
-   "UseSpatial": false
+   "UseSpatial": false,
+   "UseStoredProcedures": false
 }

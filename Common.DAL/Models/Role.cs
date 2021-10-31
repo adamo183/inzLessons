@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace inzLessons.Common.Models
 {
     public partial class Role

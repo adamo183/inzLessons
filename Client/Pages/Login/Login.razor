@@ -2,20 +2,46 @@
 
 @using Radzen.Blazor;
 @using inzLessons.Client.Pages.Login;
+@using inzLessons.Client.Services;
+@using inzLessons.Shared;
+@using Blazored.LocalStorage;
 
 @inject NavigationManager NavigationManager
+@inject ILoginServices _loginServices
+@inject AuthServices authenticationService
+@inject HttpClient httpClient
+@inject ILocalStorageService localStorage
 
 <div class="row">
     <div class="col">
-        <h5>Login</h5>
-        <RadzenTextBox @bind-Value="_login.Username" Placeholder="Nazwa użytkownika..." />
-        <h5 style="margin-top: 2rem">Hasło</h5>
-        <RadzenPassword Placeholder="Wprowadź hasło...." @bind-Value="_login.Password" />
-        <br />
-        <RadzenButton Click="LoginAction" Text="Zaloguj się" Style="margin-bottom: 20px; width: 150px; margin-top:20px" />
+        <RadzenTemplateForm TItem="LoginRequest" Data=@_login Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+            <div class="row">
+                <h5>Login</h5>
+            </div>
+            <div class="col-4" style="margin-bottom:20px">
+                <RadzenTextBox @bind-Value="_login.Username" Placeholder="Nazwa użytkownika..." Name="LoginUserField" />
+                <RadzenRequiredValidator Component="LoginUserField" Text="Nie podano nazwy użytkownika" Popup=@popup Style="position: absolute" />
+            </div>
+            <div class="row">
+                <h5 style="margin-top: 2rem">Hasło</h5>
+            </div>
+            <div class="col-4" style="margin-bottom:20px">
+                <RadzenPassword Placeholder="Wprowadź hasło...." @bind-Value="_login.Password" Name="PasswordUserField" />
+                <RadzenRequiredValidator Component="PasswordUserField" Text="Nie podano hasła" Popup=@popup Style="position: absolute" />
+                <br />
+            </div>
+            <RadzenButton ButtonType="ButtonType.Submit" @onclick="LoginAction" Text="Wyślij" />
 
 
-        <RadzenButton Click="NavigateToRegister" Text="Załóż konto" Style="margin-bottom: 20px; width: 150px; margin-top: 100px" />
+            <RadzenButton Click="NavigateToRegister" Text="Załóż konto" Style="margin-bottom: 20px; width: 150px; margin-top: 100px" />
+
+            @if (_inncorectLoginData)
+            {
+                <div class="alert alert-danger">
+                    <p> Nieprawidłowe dane logowania </p>
+                </div>
+            }
+        </RadzenTemplateForm>
     </div>
 </div>
 @code {

@@ -4,13 +4,12 @@ using System.Collections.Generic;
 
 namespace inzLessons.Common.Models
 {
-    public partial class Membership
+    public partial class Reservation
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string PasswordSalt { get; set; }
-
-        public virtual Users Users { get; set; }
+        public int Groupid { get; set; }
+        public int Userid { get; set; }
+        public bool? Isonline { get; set; }
+        public DateTime Reservationdate { get; set; }
     }
 }

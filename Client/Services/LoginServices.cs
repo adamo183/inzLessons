@@ -29,7 +29,7 @@ namespace inzLessons.Client.Services
 
         public async Task<bool> CheckUsername(string username)
         {
-            var respond = await _http.GetAsync("CheckUserName/"+username);
+            var respond = await _http.GetAsync("Login/checkUserName/" + username);
             if (!respond.IsSuccessStatusCode)
                 return true;
             else
@@ -49,11 +49,12 @@ namespace inzLessons.Client.Services
             else
                 return true;
         }
+
         public async Task<LoginResponse> UserLogin(LoginRequest param) 
         {
             var elemToSend = JsonConvert.SerializeObject(param);
             var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
-            var respond = await _http.PostAsync("", content);
+            var respond = await _http.PostAsync("Login/authenticate", content);
             if (!respond.IsSuccessStatusCode)
                 return null;
             else

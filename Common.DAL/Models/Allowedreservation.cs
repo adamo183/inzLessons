@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 namespace inzLessons.Common.Models
 {
-    public partial class Useringroup
+    public partial class Allowedreservation
     {
-        public int Userid { get; set; }
+        public int Id { get; set; }
+        public DateTime Reservationdatestart { get; set; }
+        public DateTime Reservationdateend { get; set; }
         public int Groupid { get; set; }
-        public int Condidionid { get; set; }
 
-        public virtual Lessoncondition Condidion { get; set; }
         public virtual Lessonsgroup Group { get; set; }
-        public virtual Users User { get; set; }
     }
 }

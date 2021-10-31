@@ -28,6 +28,14 @@ namespace inzLessons.Server.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("checkUserName/{username}")]
+        public IActionResult GetCheckUsername(string username)
+        {
+            bool tmp = _userService.CheckUsername(username);
+            return Ok(tmp);
+        }
+
+        [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult RegisterUser([FromBody] RegisterRequest registerRequest)
         {
@@ -43,7 +51,6 @@ namespace inzLessons.Server.Controllers
             users.Email = registerRequest.Email;
             users.Firstname = registerRequest.Firstname;
             users.Lastname = registerRequest.Lastname;
-            users.MembershipId = membToAdd.Id;
             users.Phone = registerRequest.Phone;
             users.RoleId = registerRequest.Role;
             users.Username = registerRequest.Login;
@@ -52,24 +59,24 @@ namespace inzLessons.Server.Controllers
             return Ok();
         }
 
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate(LoginRequest model)
-        //{
-        //    var response = _userService.Authenticate(model);
-
-        //    if (response == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-
-        //    return Ok(response);
-        //}
-
         [AllowAnonymous]
-        [HttpGet("CheckUserName/{userName}")]
-        public IActionResult CheckUsername([FromQuery(Name = "usernName")] string userName)
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(LoginRequest model)
         {
-            //bool tmp = _userService.CheckUsername(userName);
-            //return Ok(tmp);
-            return Ok();
+            var passwordSalt = _userService.GetUserHash(model.Username);
+            if (String.IsNullOrEmpty(passwordSalt))
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            model.Password = _userService.HashPassword(model.Password, passwordSalt, 1, 70);
+
+            var response = _userService.Authenticate(model);
+
+            if (response == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(response);
         }
+
+
     }
 }
