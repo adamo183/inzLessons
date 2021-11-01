@@ -30,10 +30,9 @@
                 <RadzenRequiredValidator Component="PasswordUserField" Text="Nie podano hasła" Popup=@popup Style="position: absolute" />
                 <br />
             </div>
-            <RadzenButton ButtonType="ButtonType.Submit" @onclick="LoginAction" Text="Wyślij" />
-
-
-            <RadzenButton Click="NavigateToRegister" Text="Załóż konto" Style="margin-bottom: 20px; width: 150px; margin-top: 100px" />
+            <RadzenButton ButtonType="ButtonType.Submit" @onclick="LoginAction" Text="Zaloguj się"  Style="width: 300px"/>
+            <br/>
+            <RadzenButton Click="NavigateToRegister" Text="Zarejestruj się" Style="margin-bottom: 20px; width: 300px; margin-top: 30px" />
 
             @if (_inncorectLoginData)
             {

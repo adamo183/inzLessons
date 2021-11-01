@@ -11,5 +11,7 @@ namespace inzLessons.Common.Models
         public int Userid { get; set; }
         public bool? Isonline { get; set; }
         public DateTime Reservationdate { get; set; }
+
+        public virtual Users User { get; set; }
     }
 }

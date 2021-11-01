@@ -6,10 +6,10 @@ namespace inzLessons.Common.Models
 {
     public partial class Membership
     {
-        public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
+        public int Id { get; set; }
 
         public virtual Users Users { get; set; }
     }

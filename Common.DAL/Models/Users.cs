@@ -8,12 +8,10 @@ namespace inzLessons.Common.Models
     {
         public Users()
         {
-            Lessoncondition = new HashSet<Lessoncondition>();
-            Lessonsgroup = new HashSet<Lessonsgroup>();
+            Reservation = new HashSet<Reservation>();
             Useringroup = new HashSet<Useringroup>();
         }
 
-        public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
@@ -22,11 +20,11 @@ namespace inzLessons.Common.Models
         public DateTime Createdate { get; set; }
         public int? RoleId { get; set; }
         public string Username { get; set; }
+        public int Id { get; set; }
 
         public virtual Membership IdNavigation { get; set; }
         public virtual Role Role { get; set; }
-        public virtual ICollection<Lessoncondition> Lessoncondition { get; set; }
-        public virtual ICollection<Lessonsgroup> Lessonsgroup { get; set; }
+        public virtual ICollection<Reservation> Reservation { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

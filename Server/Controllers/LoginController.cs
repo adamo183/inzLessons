@@ -19,7 +19,7 @@ namespace inzLessons.Server.Controllers
     public class LoginController : ControllerBase
     {
 
-       // private readonly ILogger<LoginController> _logger;
+        // private readonly ILogger<LoginController> _logger;
         private ILoginServices _userService;
 
         public LoginController(ILoginServices loginServices)
@@ -31,32 +31,49 @@ namespace inzLessons.Server.Controllers
         [HttpGet("checkUserName/{username}")]
         public IActionResult GetCheckUsername(string username)
         {
-            bool tmp = _userService.CheckUsername(username);
-            return Ok(tmp);
+            try
+            {
+                bool tmp = _userService.CheckUsername(username);
+                return Ok(tmp);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult RegisterUser([FromBody] RegisterRequest registerRequest)
         {
-            Membership membToAdd = new Membership();
-            membToAdd.Login = registerRequest.Login;
-            membToAdd.PasswordSalt = _userService.GenerateSalt(30);
-            membToAdd.Password = _userService.HashPassword(registerRequest.Password, membToAdd.PasswordSalt, 1, 70);
-            _userService.InsertMembership(membToAdd);
+            try
+            {
 
-            Users users = new Users();
-            users.City = registerRequest.City;
-            users.Createdate = DateTime.Now;
-            users.Email = registerRequest.Email;
-            users.Firstname = registerRequest.Firstname;
-            users.Lastname = registerRequest.Lastname;
-            users.Phone = registerRequest.Phone;
-            users.RoleId = registerRequest.Role;
-            users.Username = registerRequest.Login;
-            _userService.InsertUser(users);
 
-            return Ok();
+                Membership membToAdd = new Membership();
+                membToAdd.Login = registerRequest.Login;
+                membToAdd.PasswordSalt = _userService.GenerateSalt(30);
+                membToAdd.Password = _userService.HashPassword(registerRequest.Password, membToAdd.PasswordSalt, 1, 70);
+                _userService.InsertMembership(membToAdd);
+
+                Users users = new Users();
+                users.City = registerRequest.City;
+                users.Createdate = DateTime.Now;
+                users.Email = registerRequest.Email;
+                users.Firstname = registerRequest.Firstname;
+                users.Lastname = registerRequest.Lastname;
+                users.Phone = registerRequest.Phone;
+                users.RoleId = registerRequest.Role;
+                users.Username = registerRequest.Login;
+                users.Id = membToAdd.Id;
+
+                _userService.InsertUser(users);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
         }
 
         [AllowAnonymous]
