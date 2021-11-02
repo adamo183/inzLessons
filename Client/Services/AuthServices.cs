@@ -15,11 +15,13 @@ namespace inzLessons.Client.Services
     {
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _httpClient;
+        private readonly AuthenticationState _anonymous;
 
         public AuthServices(ILocalStorageService storageService, HttpClient httpClient)
         {
             _localStorage = storageService;
             _httpClient = httpClient;
+            _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -48,18 +50,18 @@ namespace inzLessons.Client.Services
             var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            ExtractRolesFromJWT(claims, keyValuePairs);
-            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes).Where(x => x.Key == "role").FirstOrDefault().Value;
+            ExtractRolesFromJWT(keyValuePairs);
+            claims = ExtractRolesFromJWT(keyValuePairs);
             return claims;
         }
 
-        private static void ExtractRolesFromJWT(List<Claim> claims, Dictionary<string, object> keyValuePairs)
+        private static List<Claim> ExtractRolesFromJWT(object keyValuePairs)
         {
-            keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
-            if (roles != null)
+            var claims = new List<Claim>();
+            if (keyValuePairs != null)
             {
-                var parsedRoles = roles.ToString().Trim().TrimStart('[').TrimEnd(']').Split(',');
+                var parsedRoles = keyValuePairs.ToString().Trim().TrimStart('[').TrimEnd(']').Split(',');
                 if (parsedRoles.Length > 1)
                 {
                     foreach (var parsedRole in parsedRoles)
@@ -71,8 +73,9 @@ namespace inzLessons.Client.Services
                 {
                     claims.Add(new Claim(ClaimTypes.Role, parsedRoles[0]));
                 }
-                keyValuePairs.Remove(ClaimTypes.Role);
             }
+
+            return claims;
         }
 
         private static byte[] ParseBase64WithoutPadding(string payload)
@@ -80,6 +83,12 @@ namespace inzLessons.Client.Services
             payload = payload.Replace('-', '+').Replace('_', '/');
             var base64 = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
             return Convert.FromBase64String(base64);
+        }
+
+        public void NotifyUserLogout()
+        {
+            var authState = Task.FromResult(_anonymous);
+            NotifyAuthenticationStateChanged(authState);
         }
     }
 }

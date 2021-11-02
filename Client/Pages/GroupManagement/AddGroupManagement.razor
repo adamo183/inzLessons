@@ -1,0 +1,17 @@
+﻿@page "/addGroupManagement"
+
+@inject NavigationManager NavigationManager
+
+<div class="row">
+    <RadzenLabel Text="Nazwa grupy:" />
+    <RadzenTextBox @bind-Value="lessonsGroupDTO.Name" Style="margin-left: 30px" />
+</div>
+
+<div class="row">
+    <RadzenLabel Text="Nazwa grupy:" />
+    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 30px"/>
+</div>
+
+@code {
+
+}

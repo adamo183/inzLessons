@@ -16,7 +16,7 @@ namespace inzLessons.Server.Services
 {
     public interface ILoginServices
     {
-        string GenerateJwtToken(Users user);
+        string GenerateJwtToken(Users user, string role);
         LoginResponse Authenticate(LoginRequest model);
         Users GetById(int id);
         public string GenerateSalt(int nSalt);
@@ -90,20 +90,22 @@ namespace inzLessons.Server.Services
             if (membership == null)
                 return null;
 
-            var user = _unitOfWork.UsersRepository.Get(x => x.Id == membership.Id).FirstOrDefault();
-            var token = GenerateJwtToken(user);
+            var user = _unitOfWork.UsersRepository.Get(x => x.Id == membership.Id, includeProperties: "Role").FirstOrDefault();
+
+            string role = user.Role.Name;
+            var token = GenerateJwtToken(user, role);
 
             return new LoginResponse() { Id = user.Id, FirstName = user.Firstname, LastName = user.Lastname, Username = user.Username, Token = token, Role = (Shared.Role.RoleEnum)user.RoleId.Value };
         }
 
-        public string GenerateJwtToken(Users user)
+        public string GenerateJwtToken(Users user, string role)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("aaaaaululullululu");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), new Claim(ClaimTypes.Role, role) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

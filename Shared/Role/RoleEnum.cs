@@ -8,8 +8,8 @@ namespace inzLessons.Shared.Role
 {
     public enum RoleEnum
     {
-        Student = 1,
-        Teacher,
-        Admin
+        Admin = 1,
+        Student,
+        Teacher
     }
 }
