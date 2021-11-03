@@ -15,7 +15,7 @@ using inzLessons.Shared.Users;
 namespace inzLessons.Server.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     [Route("[controller]")]
     public class GroupController : ControllerBase
     {

@@ -15,7 +15,7 @@ namespace inzLessons.Client.Pages.GroupManagement
 
         protected override async Task OnInitializedAsync()
         {
-            users = 
+            users = await userServices.GetUserList(); 
         }
 
     }
