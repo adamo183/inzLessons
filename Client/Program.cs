@@ -24,7 +24,8 @@ namespace inzLessons.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthServices>();
             builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthServices>());
-
+            builder.Services.AddScoped<IUserServices, UserServices>();
+            builder.Services.AddScoped<IGroupServices, GroupServices>();
             builder.Services.AddScoped<ILoginServices, LoginServices>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();

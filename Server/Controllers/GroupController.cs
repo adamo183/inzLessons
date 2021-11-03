@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using inzLessons.Common.Models;
+using inzLessons.Shared.Users;
 
 namespace inzLessons.Server.Controllers
 {
@@ -18,10 +19,23 @@ namespace inzLessons.Server.Controllers
     [Route("[controller]")]
     public class GroupController : ControllerBase
     {
-        public GroupController()
-        {
+        private IGroupServices _groupServices;
 
+        public GroupController(IGroupServices groupServices)
+        {
+            _groupServices = groupServices;
         }
+
+        [Authorize]
+        [HttpGet("studentToSelect")]
+        public IActionResult GetStudentList()
+        {
+            var listToRet = _groupServices.GetAwaibleUsersToGroup().Select(x => new UserDTO() 
+            { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
+
+            return Ok(listToRet);
+        }
+
     }
 }
 

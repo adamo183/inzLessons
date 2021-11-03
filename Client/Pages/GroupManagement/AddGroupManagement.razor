@@ -1,6 +1,9 @@
 ﻿@page "/addGroupManagement"
 
-@inject NavigationManager NavigationManager
+@using inzLessons.Client.Services; 
+
+@inject NavigationManager NavigationManager;
+@inject IUserServices userServices;
 
 <div class="row">
     <RadzenLabel Text="Nazwa grupy:" />
@@ -9,7 +12,12 @@
 
 <div class="row" style="margin-top:20px">
     <RadzenLabel Text="Opis:" />
-    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 90px"/>
+    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 90px" />
+</div>
+<div class="row" style="margin-top:20px">
+    <h3>ListBox with multiple selection</h3>
+    <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues Multiple="true" Data=@users
+                   TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:600px" />
 </div>
 
 @code {
