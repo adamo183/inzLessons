@@ -7,9 +7,9 @@
     <RadzenTextBox @bind-Value="lessonsGroupDTO.Name" Style="margin-left: 30px" />
 </div>
 
-<div class="row">
-    <RadzenLabel Text="Nazwa grupy:" />
-    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 30px"/>
+<div class="row" style="margin-top:20px">
+    <RadzenLabel Text="Opis:" />
+    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 90px"/>
 </div>
 
 @code {
