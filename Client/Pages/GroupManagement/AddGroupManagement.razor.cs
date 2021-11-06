@@ -10,7 +10,7 @@ namespace inzLessons.Client.Pages.GroupManagement
     public partial class AddGroupManagement
     {
         LessonsGroupDTO lessonsGroupDTO = new LessonsGroupDTO();
-        IEnumerable<string> multipleValues = new string[] { "ALFKI", "ANATR" };
+        IEnumerable<int> multipleValues = new List<int>();
         IEnumerable<UserDTO> users = new List<UserDTO>();
 
         protected override async Task OnInitializedAsync()

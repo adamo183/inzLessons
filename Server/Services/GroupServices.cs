@@ -9,16 +9,13 @@ namespace inzLessons.Server.Services
 {
     public interface IGroupServices
     {
-        public List<Users> GetAwaibleUsersToGroup();
+        
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
 
-        public List<Users> GetAwaibleUsersToGroup()
-        {
-            return _unitOfWork.UsersRepository.Get(x => x.RoleId == 2).ToList();
-        }
+
     }
 }

@@ -23,7 +23,7 @@ namespace inzLessons.Client.Services
 
         public async Task<List<UserDTO>> GetUserList()
         {
-            var respond = await _http.GetAsync("Group/studentToSelect");
+            var respond = await _http.GetAsync("Users/studentToSelect");
             if (!respond.IsSuccessStatusCode)
                 return null;
             else

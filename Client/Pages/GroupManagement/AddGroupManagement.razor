@@ -1,23 +1,34 @@
 ﻿@page "/addGroupManagement"
 
-@using inzLessons.Client.Services; 
+@using inzLessons.Client.Services;
 
 @inject NavigationManager NavigationManager;
 @inject IUserServices userServices;
 
 <div class="row">
-    <RadzenLabel Text="Nazwa grupy:" />
-    <RadzenTextBox @bind-Value="lessonsGroupDTO.Name" Style="margin-left: 30px" />
+    <div class="col-4">
+        <RadzenLabel Text="Nazwa grupy:" />
+    </div>
+    <div class="col-4">
+        <RadzenTextBox @bind-Value="lessonsGroupDTO.Name" />
+    </div>
 </div>
-
 <div class="row" style="margin-top:20px">
-    <RadzenLabel Text="Opis:" />
-    <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Style="margin-left: 90px" />
+    <div class="col-4">
+        <RadzenLabel Text="Opis:" />
+    </div>
+    <div class="col-4">
+        <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" />
+    </div>
 </div>
 <div class="row" style="margin-top:20px">
-    <h3>ListBox with multiple selection</h3>
-    <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues Multiple="true" Data=@users
-                   TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:600px" />
+    <div class="col-4">
+        <RadzenLabel Text="Uczniowie do dodania:" />
+    </div>
+    <div class="col-4">
+        <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues Multiple="true" Data=@users
+                       TextProperty="DisplayFullName" ValueProperty="Id" Style="height:450px; width: 300px" />
+    </div>
 </div>
 
 @code {

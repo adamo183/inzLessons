@@ -34,7 +34,6 @@ namespace inzLessons.Client.Services
             }
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
-
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt")));
         }
 

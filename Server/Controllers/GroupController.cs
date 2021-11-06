@@ -11,12 +11,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using inzLessons.Common.Models;
 using inzLessons.Shared.Users;
+using inzLessons.Shared.Role;
 
 namespace inzLessons.Server.Controllers
 {
+
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
     public class GroupController : ControllerBase
     {
         private IGroupServices _groupServices;
@@ -26,15 +28,7 @@ namespace inzLessons.Server.Controllers
             _groupServices = groupServices;
         }
 
-        [Authorize]
-        [HttpGet("studentToSelect")]
-        public IActionResult GetStudentList()
-        {
-            var listToRet = _groupServices.GetAwaibleUsersToGroup().Select(x => new UserDTO() 
-            { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
 
-            return Ok(listToRet);
-        }
 
     }
 }
