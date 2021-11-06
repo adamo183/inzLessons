@@ -6,17 +6,10 @@ namespace inzLessons.Common.Models
 {
     public partial class Lessoncondition
     {
-        public Lessoncondition()
-        {
-            Useringroup = new HashSet<Useringroup>();
-        }
-
         public int Id { get; set; }
         public int? Allowedhourinweek { get; set; }
         public float? Price { get; set; }
         public string Configname { get; set; }
         public int Teacherid { get; set; }
-
-        public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

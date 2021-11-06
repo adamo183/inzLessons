@@ -9,13 +9,41 @@ namespace inzLessons.Server.Services
 {
     public interface IGroupServices
     {
-        
+        public void AddGroup(Lessonsgroup groupToAdd);
+        public void AddUserInGroup(Useringroup useringroup);
+        public List<Lessonsgroup> GetLessonsgroups(int userID);
+        public List<Users> GetUsersInGroup(int groupId);
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
 
+        public List<Lessonsgroup> GetLessonsgroups(int teacherID)
+        {
+            var groupListToRet = _unitOfWork.LessonsGroupRepository.Get(x => x.Teacherid == teacherID).ToList();
+            return groupListToRet;
+        }
+
+        public List<Users> GetUsersInGroup(int groupId)
+        {
+            var usersInGroup = _unitOfWork.UserInGroupRepository.Get(x => x.Groupid == groupId, includeProperties: "User").Select(x=>x.User).ToList();
+            return usersInGroup;
+        }
+
+        public void AddGroup(Lessonsgroup groupToAdd)
+        {
+            _unitOfWork.LessonsGroupRepository.Insert(groupToAdd);
+            _unitOfWork.Save();
+            return;
+        }
+
+        public void AddUserInGroup(Useringroup useringroup)
+        {
+            _unitOfWork.UserInGroupRepository.Insert(useringroup);
+            _unitOfWork.Save();
+            return;
+        }
 
     }
 }

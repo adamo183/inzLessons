@@ -16,6 +16,7 @@ namespace inzLessons.Common.Models
         public string Name { get; set; }
         public DateTime? Creationdate { get; set; }
         public int Teacherid { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<Allowedreservation> Allowedreservation { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }

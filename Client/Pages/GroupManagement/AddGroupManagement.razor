@@ -1,36 +1,49 @@
 ﻿@page "/addGroupManagement"
 
 @using inzLessons.Client.Services;
+@using inzLessons.Shared.Group;
 
 @inject NavigationManager NavigationManager;
 @inject IUserServices userServices;
+@inject IGroupServices groupServices;
 
-<div class="row">
-    <div class="col-4">
-        <RadzenLabel Text="Nazwa grupy:" />
+<RadzenTemplateForm TItem="LessonsGroupDTO" Data=@lessonsGroupDTO Submit=@OnGroupAdd>
+    <div class="row">
+        <div class="col-4">
+            <RadzenLabel Text="Nazwa grupy:" />
+        </div>
+        <div class="col-4">
+            <RadzenTextBox @bind-Value="lessonsGroupDTO.Name"  Name="Name" />
+            <RadzenRequiredValidator Component="Name" Text="Pole wymagane!" Popup=@popup Style="position: absolute" />
+        </div>
     </div>
-    <div class="col-4">
-        <RadzenTextBox @bind-Value="lessonsGroupDTO.Name" />
+    <div class="row" style="margin-top:20px">
+        <div class="col-4">
+            <RadzenLabel Text="Opis:" />
+        </div>
+        <div class="col-4">
+            <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" Name="Desctiption" />
+            <RadzenRequiredValidator Component="Desctiption" Text="Pole wymagane!" Popup=@popup Style="position: absolute" />
+        </div>
     </div>
-</div>
-<div class="row" style="margin-top:20px">
-    <div class="col-4">
-        <RadzenLabel Text="Opis:" />
+    <div class="row" style="margin-top:20px">
+        <div class="col-4">
+            <RadzenLabel Text="Uczniowie do dodania:" />
+        </div>
+        <div class="col-4">
+            @if (MembersIdsListClear)
+            {
+                <div class="alert alert-danger" role="alert">
+                    Nie wybrano żadnego ucznia!!
+                </div>
+            }
+            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@lessonsGroupDTO.MembersIds Multiple="true" Data=@users
+                           TextProperty="DisplayFullName" ValueProperty="Id" Style="height:450px; width: 300px" />
+        </div>
     </div>
-    <div class="col-4">
-        <RadzenTextArea MaxLength="400" @bind-Value="lessonsGroupDTO.Description" />
+    <div class="row">
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Dodaj" />
     </div>
-</div>
-<div class="row" style="margin-top:20px">
-    <div class="col-4">
-        <RadzenLabel Text="Uczniowie do dodania:" />
-    </div>
-    <div class="col-4">
-        <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues Multiple="true" Data=@users
-                       TextProperty="DisplayFullName" ValueProperty="Id" Style="height:450px; width: 300px" />
-    </div>
-</div>
-
+</RadzenTemplateForm>
 @code {
-
 }

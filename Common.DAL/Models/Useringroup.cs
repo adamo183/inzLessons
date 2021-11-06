@@ -8,9 +8,8 @@ namespace inzLessons.Common.Models
     {
         public int Userid { get; set; }
         public int Groupid { get; set; }
-        public int Condidionid { get; set; }
+        public double? Price { get; set; }
 
-        public virtual Lessoncondition Condidion { get; set; }
         public virtual Lessonsgroup Group { get; set; }
         public virtual Users User { get; set; }
     }
