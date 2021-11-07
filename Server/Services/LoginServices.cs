@@ -102,7 +102,7 @@ namespace inzLessons.Server.Services
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("aaaaaululullululu");
+            var key = Encoding.ASCII.GetBytes("asdasjdokajfudinvdikosejwrk2i34r209");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), new Claim(ClaimTypes.Role, role) }),

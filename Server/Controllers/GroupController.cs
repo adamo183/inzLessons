@@ -26,15 +26,6 @@ namespace inzLessons.Server.Controllers
             _groupServices = groupServices;
         }
 
-        [Authorize]
-        [HttpGet("studentToSelect")]
-        public IActionResult GetStudentList()
-        {
-            var listToRet = _groupServices.GetAwaibleUsersToGroup().Select(x => new UserDTO() 
-            { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
-
-            return Ok(listToRet);
-        }
 
     }
 }
