@@ -1,4 +1,5 @@
-﻿using System;
+﻿using inzLessons.Shared.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace inzLessons.Shared.Group
 {
-    public class LessonsGroupDTO
+    public class GroupWithUsersDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IEnumerable<int> MembersIds { get; set; } 
-        public LessonsGroupDTO() 
+        public List<UserDTO> UsersList { get; set; }
+        public GroupWithUsersDTO()
         {
-            MembersIds = new List<int>();
+            UsersList = new List<UserDTO>();
         }
     }
 }

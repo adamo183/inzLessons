@@ -12,9 +12,7 @@ namespace inzLessons.Server.Services
         public List<Users> GetAwaibleUsersToGroup();
     }
 
-
-
-    public class UserServices : IUsersServices
+    public class UsersServices : IUsersServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
 

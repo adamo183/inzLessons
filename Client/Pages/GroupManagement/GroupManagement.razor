@@ -1,9 +1,37 @@
 ﻿@page "/groupManagement"
 
 @inject NavigationManager NavigationManager
+@inject IGroupServices groupServices;
+
+@using inzLessons.Client.Services;
+@using inzLessons.Shared.Group;
 
 <RadzenButton Click="AddNewGroup" Text="Dodaj nową grupę" Style="width:400px;" />
 
-@code {
+<RadzenDataList WrapItems="true" AllowPaging="true" Data="@TeacherGroup" TItem="GroupWithUsersDTO">
+    <Template Context="order">
+            <RadzenCard>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>Nazwa:</div>
+                        <b>@order.Name</b>
+                        <div>Nazwa:</div>
+                        <b>@order.Description</b>
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenTree Style="width: 100%; height: 300px">
+                            <RadzenTreeItem Text="Uczniowie:">
+                                @foreach (var tmp in order.UsersList)
+                                {
+                                    <RadzenTreeItem Text=@tmp.DisplayFullName />
+                                }
+                            </RadzenTreeItem>
+                        </RadzenTree>
+                    </div>
+                </div>
+            </RadzenCard>
+    </Template>
+</RadzenDataList>
 
+@code {
 }

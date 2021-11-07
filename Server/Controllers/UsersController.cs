@@ -1,7 +1,5 @@
 ﻿using inzLessons.Server.Services;
-using inzLessons.Shared;
-using inzLessons.Shared.Login;
-using inzLessons.Shared.Register;
+using inzLessons.Shared.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,16 +19,19 @@ namespace inzLessons.Server.Controllers
     {
         private IUsersServices _usersServices;
 
-        public UsersController(IUsersServices groupServices)
+        // private readonly ILogger<LoginController> _logger;
+        private IUsersServices _userService;
+
+        public UsersController(IUsersServices usersServices)
         {
-            _usersServices = groupServices;
+            _userService = usersServices;
         }
 
         [Authorize]
         [HttpGet("studentToSelect")]
         public IActionResult GetStudentList()
         {
-            var listToRet = _usersServices.GetAwaibleUsersToGroup().Select(x => new UserDTO()
+            var listToRet = _userService.GetAwaibleUsersToGroup().Select(x => new UserDTO()
             { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
 
             return Ok(listToRet);

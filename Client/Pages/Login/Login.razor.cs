@@ -38,10 +38,13 @@ namespace inzLessons.Client.Pages.Login
             {
                 authenticationService.NotifyUserAuthentication(loginResponse.Token);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResponse.Token);
+                await localStorage.ClearAsync();
                 await localStorage.SetItemAsync("UserName", loginResponse.Username);
                 await localStorage.SetItemAsync("Token", loginResponse.Token);
                 await localStorage.SetItemAsync("PersonelId", loginResponse.Id);
                 await localStorage.SetItemAsync("Role", loginResponse.Role);
+
+
 
                 if (loginResponse.Role == RoleEnum.Student)
                 {

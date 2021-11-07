@@ -87,6 +87,10 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Creationdate).HasColumnName("creationdate");
 
+                entity.Property(e => e.Description)
+                    .HasColumnName("description")
+                    .HasMaxLength(400);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
@@ -163,13 +167,7 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Groupid).HasColumnName("groupid");
 
-                entity.Property(e => e.Condidionid).HasColumnName("condidionid");
-
-                entity.HasOne(d => d.Condidion)
-                    .WithMany(p => p.Useringroup)
-                    .HasForeignKey(d => d.Condidionid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_condition_useringroup");
+                entity.Property(e => e.Price).HasColumnName("price");
 
                 entity.HasOne(d => d.Group)
                     .WithMany(p => p.Useringroup)
