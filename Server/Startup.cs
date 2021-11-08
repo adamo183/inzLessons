@@ -88,7 +88,6 @@ namespace inzLessons.Server
             services.AddScoped<ILoginServices, LoginServices>();
             services.AddScoped<IUsersServices, UsersServices>();
             services.AddScoped<IGroupServices, GroupServices>();
-            services.AddScoped<IUsersServices, UserServices>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
