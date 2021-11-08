@@ -10,7 +10,7 @@
 
 <RadzenDataList WrapItems="true" AllowPaging="true" Data="@TeacherGroup" TItem="GroupWithUsersDTO">
     <Template Context="order">
-            <RadzenCard>
+            <RadzenCard Style="width:300px;">
                 <div class="row">
                     <div class="col-md-6">
                         <div>Nazwa:</div>
@@ -29,7 +29,12 @@
                         </RadzenTree>
                     </div>
                 </div>
+                <div class="row">
+                    <RadzenButton Text="Edytuj" />
+                    <RadzenButton Text="Usuń" Style="margin-left:20px"/>
+                </div>
             </RadzenCard>
+        <br/>
     </Template>
 </RadzenDataList>
 
