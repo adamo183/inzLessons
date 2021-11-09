@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using inzLessons.Shared.Group;
 using inzLessons.Shared.Users;
+using Microsoft.AspNetCore.Components;
 
 namespace inzLessons.Client.Pages.GroupManagement
 {
@@ -14,9 +15,26 @@ namespace inzLessons.Client.Pages.GroupManagement
         bool MembersIdsListClear = false;
         bool popup;
 
+        [Parameter]
+        public string? Id { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             users = await userServices.GetUserList();
+
+            if (Id != null)
+            {
+                var lessonGroupEdit = await groupServices.GetGroupDataById(Id);
+                lessonsGroupDTO = new LessonsGroupDTO()
+                {
+                    Id = lessonGroupEdit.Id,
+                    Description = lessonGroupEdit.Description,
+                    Name = lessonGroupEdit.Name,
+                    MembersIds = lessonGroupEdit.UsersList.Select(x => x.Id).ToList()
+                }; 
+            }
+
+            StateHasChanged();
         }
 
         public async void OnGroupAdd()

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Radzen;
 
 namespace inzLessons.Client
 {
@@ -42,6 +43,8 @@ namespace inzLessons.Client
             builder.Services.AddScoped<IUserServices, UserServices>();
             builder.Services.AddScoped<IGroupServices, GroupServices>();
             builder.Services.AddScoped<ILoginServices, LoginServices>();
+            builder.Services.AddScoped<IReservationServices, ReservationServices>();
+            builder.Services.AddScoped<DialogService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();
 

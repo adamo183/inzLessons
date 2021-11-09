@@ -20,5 +20,10 @@ namespace inzLessons.Client.Pages.GroupManagement
         {
             NavigationManager.NavigateTo("/addGroupManagement");
         }
+
+        public void NavigateToGroupEdit(int GroupId)
+        {
+            NavigationManager.NavigateTo("/addGroupManagement/" + GroupId);
+        }
     }
 }

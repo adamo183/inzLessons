@@ -19,7 +19,9 @@ namespace Common.DAL.UnitOfWork
         private GenericRepository<Lessonsgroup> _lessonsGroup;
         private GenericRepository<Lessoncondition> _lessonsCondition;
         private GenericRepository<Useringroup> _userInGroup;
+        private GenericRepository<Reservation> _reservation;
 
+        public GenericRepository<Reservation> ReservationRespository => _reservation ?? new GenericRepository<Reservation>(context);
         public GenericRepository<Useringroup> UserInGroupRepository => _userInGroup ?? new GenericRepository<Useringroup>(context);
         public GenericRepository<Lessoncondition> LessonsConditionRepository => _lessonsCondition ?? new GenericRepository<Lessoncondition>(context);
         public GenericRepository<Lessonsgroup> LessonsGroupRepository => _lessonsGroup ?? new GenericRepository<Lessonsgroup>(context);

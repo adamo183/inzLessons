@@ -13,11 +13,18 @@ namespace inzLessons.Server.Services
         public void AddUserInGroup(Useringroup useringroup);
         public List<Lessonsgroup> GetLessonsgroups(int userID);
         public List<Users> GetUsersInGroup(int groupId);
+        public Lessonsgroup GetGroupById(int groupId);
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public Lessonsgroup GetGroupById(int groupId)
+        {
+            var groupToRet = _unitOfWork.LessonsGroupRepository.Get(x => x.Id == groupId).FirstOrDefault();
+            return groupToRet;
+        }
 
         public List<Lessonsgroup> GetLessonsgroups(int teacherID)
         {

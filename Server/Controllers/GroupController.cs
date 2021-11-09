@@ -53,31 +53,49 @@ namespace inzLessons.Server.Controllers
         }
 
         [Authorize]
-        [HttpPost("")]
-        public IActionResult PostInsertGroup(LessonsGroupDTO groupToAdd)
+        [HttpGet("{Id}")]
+        public IActionResult GetGroupById(int Id)
         {
-
-            Lessonsgroup lessonsgroup = new Lessonsgroup();
-            lessonsgroup.Creationdate = DateTime.Now;
-            lessonsgroup.Name = groupToAdd.Name;
-            lessonsgroup.Description = groupToAdd.Description;
-            lessonsgroup.Teacherid = int.Parse(this.User.FindFirst("id").Value);
-            _groupServices.AddGroup(lessonsgroup);
-            if (lessonsgroup.Id > 0)
+            var groupList = _groupServices.GetGroupById(Id);
+            if (groupList != null)
             {
-                foreach (var item in groupToAdd.MembersIds)
-                {
-                    Useringroup useringroup = new Useringroup();
-                    useringroup.Groupid = lessonsgroup.Id;
-                    useringroup.Userid = item;
-
-                    _groupServices.AddUserInGroup(useringroup);
-                }
-
+                GroupWithUsersDTO groupToAdd = new GroupWithUsersDTO();
+                groupToAdd.Id = groupList.Id;
+                groupToAdd.Name = groupList.Name;
+                groupToAdd.Description = groupList.Description;
+                groupToAdd.UsersList = _groupServices.GetUsersInGroup(groupList.Id).Select(x => new UserDTO() { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
+                return Ok(groupToAdd);
             }
 
-            return Ok();
+            return StatusCode(500);
         }
+
+    [Authorize]
+    [HttpPost("")]
+    public IActionResult PostInsertGroup(LessonsGroupDTO groupToAdd)
+    {
+
+        Lessonsgroup lessonsgroup = new Lessonsgroup();
+        lessonsgroup.Creationdate = DateTime.Now;
+        lessonsgroup.Name = groupToAdd.Name;
+        lessonsgroup.Description = groupToAdd.Description;
+        lessonsgroup.Teacherid = int.Parse(this.User.FindFirst("id").Value);
+        _groupServices.AddGroup(lessonsgroup);
+        if (lessonsgroup.Id > 0)
+        {
+            foreach (var item in groupToAdd.MembersIds)
+            {
+                Useringroup useringroup = new Useringroup();
+                useringroup.Groupid = lessonsgroup.Id;
+                useringroup.Userid = item;
+
+                _groupServices.AddUserInGroup(useringroup);
+            }
+
+        }
+
+        return Ok();
     }
+}
 }
 

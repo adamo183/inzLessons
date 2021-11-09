@@ -1,13 +1,14 @@
 ﻿@page "/reservation"
 
 @inject NavigationManager NavigationManager;
+@inject DialogService DialogService
 
-@using inzLessons.Shared.Reservation; 
+@using inzLessons.Shared.Reservation;
 
 <div class="row">
     <div class="col-xl-6">
-        <RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
-                         TextProperty="Text" SelectedIndex="2"
+        <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
+                         TextProperty="Description" SelectedIndex="2"
                          SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
             <RadzenDayView />
             <RadzenWeekView />

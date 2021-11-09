@@ -13,6 +13,7 @@ namespace inzLessons.Client.Services
     {
         public Task<List<GroupWithUsersDTO>> GetTeacherGroup();
         public Task<bool> CreateNewGroup(LessonsGroupDTO group);
+        public Task<GroupWithUsersDTO> GetGroupDataById(string Id);
     }
 
     public class GroupServices : IGroupServices
@@ -22,6 +23,18 @@ namespace inzLessons.Client.Services
         public GroupServices(HttpClient http)
         {
             _http = http;
+        }
+
+        public async Task<GroupWithUsersDTO> GetGroupDataById(string Id)
+        {
+            var respond = await _http.GetAsync("Group/" + Id);
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<GroupWithUsersDTO>(retElem); ;
+            }
         }
 
         public async Task<bool> CreateNewGroup(LessonsGroupDTO group)
