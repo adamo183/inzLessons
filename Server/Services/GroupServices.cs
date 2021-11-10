@@ -11,14 +11,30 @@ namespace inzLessons.Server.Services
     {
         public void AddGroup(Lessonsgroup groupToAdd);
         public void AddUserInGroup(Useringroup useringroup);
+        public void DeleteUserInGroup(Useringroup useringroup);
         public List<Lessonsgroup> GetLessonsgroups(int userID);
         public List<Users> GetUsersInGroup(int groupId);
         public Lessonsgroup GetGroupById(int groupId);
+        public void EditGroup(Lessonsgroup groupToAdd);
+        public Useringroup GetUseringroup(int groupId, int userId);
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public Useringroup GetUseringroup(int groupId, int userId)
+        {
+            var userInGroupToRet = _unitOfWork.UserInGroupRepository.Get(x => x.Groupid == groupId && x.Userid == userId).FirstOrDefault();
+            return userInGroupToRet;
+        }
+
+        public void DeleteUserInGroup(Useringroup useringroup)
+        {
+            _unitOfWork.UserInGroupRepository.Delete(useringroup);
+            _unitOfWork.Save();
+            return;
+        }
 
         public Lessonsgroup GetGroupById(int groupId)
         {
@@ -41,6 +57,13 @@ namespace inzLessons.Server.Services
         public void AddGroup(Lessonsgroup groupToAdd)
         {
             _unitOfWork.LessonsGroupRepository.Insert(groupToAdd);
+            _unitOfWork.Save();
+            return;
+        }
+
+        public void EditGroup(Lessonsgroup groupToAdd)
+        {
+            _unitOfWork.LessonsGroupRepository.Update(groupToAdd);
             _unitOfWork.Save();
             return;
         }

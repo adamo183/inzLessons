@@ -14,6 +14,8 @@ namespace inzLessons.Client.Services
         public Task<List<GroupWithUsersDTO>> GetTeacherGroup();
         public Task<bool> CreateNewGroup(LessonsGroupDTO group);
         public Task<GroupWithUsersDTO> GetGroupDataById(string Id);
+        public Task<bool> EditGroup(LessonsGroupDTO group);
+        public Task<bool> DeleteGroup(int Id);
     }
 
     public class GroupServices : IGroupServices
@@ -23,6 +25,15 @@ namespace inzLessons.Client.Services
         public GroupServices(HttpClient http)
         {
             _http = http;
+        }
+
+        public async Task<bool> DeleteGroup(int Id)
+        {
+            var respond = await _http.DeleteAsync("Group/" + Id);
+            if (!respond.IsSuccessStatusCode)
+                return false;
+            else
+                return true;
         }
 
         public async Task<GroupWithUsersDTO> GetGroupDataById(string Id)
@@ -42,6 +53,17 @@ namespace inzLessons.Client.Services
             var elemToSend = JsonConvert.SerializeObject(group);
             var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
             var respond = await _http.PostAsync("Group", content);
+            if (!respond.IsSuccessStatusCode)
+                return false;
+            else
+                return true;
+        }
+
+        public async Task<bool> EditGroup(LessonsGroupDTO group)
+        {
+            var elemToSend = JsonConvert.SerializeObject(group);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _http.PutAsync("Group", content);
             if (!respond.IsSuccessStatusCode)
                 return false;
             else

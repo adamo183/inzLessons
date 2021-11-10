@@ -31,7 +31,7 @@ namespace inzLessons.Client.Pages.GroupManagement
                     Description = lessonGroupEdit.Description,
                     Name = lessonGroupEdit.Name,
                     MembersIds = lessonGroupEdit.UsersList.Select(x => x.Id).ToList()
-                }; 
+                };
             }
 
             StateHasChanged();
@@ -45,12 +45,24 @@ namespace inzLessons.Client.Pages.GroupManagement
             {
                 MembersIdsListClear = true;
                 StateHasChanged();
+                return;
             }
 
-            var status = await groupServices.CreateNewGroup(lessonsGroupDTO);
-            if (status)
+            if (String.IsNullOrEmpty(Id))
             {
-                NavigationManager.NavigateTo("/groupManagement");
+                var status = await groupServices.CreateNewGroup(lessonsGroupDTO);
+                if (status)
+                {
+                    NavigationManager.NavigateTo("/groupManagement");
+                }
+            }
+            else
+            {
+                var status = await groupServices.EditGroup(lessonsGroupDTO);
+                if (status)
+                {
+                    NavigationManager.NavigateTo("/groupManagement");
+                }
             }
         }
 

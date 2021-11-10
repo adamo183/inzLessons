@@ -30,6 +30,13 @@ namespace inzLessons.Server.Controllers
         }
 
         [Authorize]
+        [HttpGet("{Id}")]
+        public IActionResult DeleteGroupById(int Id)
+        {
+            return Ok();
+        }
+
+        [Authorize]
         [HttpGet("")]
         public IActionResult GetMyGroup()
         {
@@ -70,32 +77,70 @@ namespace inzLessons.Server.Controllers
             return StatusCode(500);
         }
 
-    [Authorize]
-    [HttpPost("")]
-    public IActionResult PostInsertGroup(LessonsGroupDTO groupToAdd)
-    {
-
-        Lessonsgroup lessonsgroup = new Lessonsgroup();
-        lessonsgroup.Creationdate = DateTime.Now;
-        lessonsgroup.Name = groupToAdd.Name;
-        lessonsgroup.Description = groupToAdd.Description;
-        lessonsgroup.Teacherid = int.Parse(this.User.FindFirst("id").Value);
-        _groupServices.AddGroup(lessonsgroup);
-        if (lessonsgroup.Id > 0)
+        [Authorize]
+        [HttpPost("")]
+        public IActionResult PostInsertGroup(LessonsGroupDTO groupToAdd)
         {
-            foreach (var item in groupToAdd.MembersIds)
-            {
-                Useringroup useringroup = new Useringroup();
-                useringroup.Groupid = lessonsgroup.Id;
-                useringroup.Userid = item;
 
-                _groupServices.AddUserInGroup(useringroup);
+            Lessonsgroup lessonsgroup = new Lessonsgroup();
+            lessonsgroup.Creationdate = DateTime.Now;
+            lessonsgroup.Name = groupToAdd.Name;
+            lessonsgroup.Description = groupToAdd.Description;
+            lessonsgroup.Teacherid = int.Parse(this.User.FindFirst("id").Value);
+            _groupServices.AddGroup(lessonsgroup);
+            if (lessonsgroup.Id > 0)
+            {
+                foreach (var item in groupToAdd.MembersIds)
+                {
+                    Useringroup useringroup = new Useringroup();
+                    useringroup.Groupid = lessonsgroup.Id;
+                    useringroup.Userid = item;
+
+                    _groupServices.AddUserInGroup(useringroup);
+                }
+
             }
 
+            return Ok();
         }
 
-        return Ok();
+        [Authorize]
+        [HttpPut("")]
+        public IActionResult PutEditGroup(LessonsGroupDTO groupToAdd)
+        {
+
+            Lessonsgroup lessonsgroup = _groupServices.GetGroupById(groupToAdd.Id);
+            lessonsgroup.Name = groupToAdd.Name;
+            lessonsgroup.Description = groupToAdd.Description;
+            _groupServices.EditGroup(lessonsgroup);
+
+            var actualUserInGroup = _groupServices.GetUsersInGroup(groupToAdd.Id).Select(x => x.Id).ToList();
+            foreach (var item in groupToAdd.MembersIds.ToList())
+            {
+                if (!actualUserInGroup.Contains(item))
+                {
+                    Useringroup useringroup = new Useringroup();
+                    useringroup.Groupid = groupToAdd.Id;
+                    useringroup.Userid = item;
+                    _groupServices.AddUserInGroup(useringroup);
+                }
+            }
+
+            List<int> usersOnServer = lessonsgroup.Useringroup.Select(x => x.Userid).ToList();
+            foreach (var item in usersOnServer)
+            {
+                if (!groupToAdd.MembersIds.Contains(item))
+                {
+                    var userToDelete = _groupServices.GetUseringroup(lessonsgroup.Id, item);
+                    if (userToDelete != null)
+                    {
+                        _groupServices.DeleteUserInGroup(userToDelete);
+                    }
+                }
+            }
+
+            return Ok();
+        }
     }
-}
 }
 

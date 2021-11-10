@@ -43,7 +43,14 @@
         </div>
     </div>
     <div class="row">
-        <RadzenButton ButtonType="ButtonType.Submit" Text="Dodaj" />
+        @if (String.IsNullOrEmpty(Id))
+        {
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Dodaj" />
+        }
+        else
+        {
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Zapisz" />
+        }
     </div>
 </RadzenTemplateForm>
 @code {
