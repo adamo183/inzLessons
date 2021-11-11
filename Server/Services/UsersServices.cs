@@ -10,11 +10,18 @@ namespace inzLessons.Server.Services
     public interface IUsersServices
     {
         public List<Users> GetAwaibleUsersToGroup();
+        public List<Users> GetUsersInGroup(int id);
     }
 
     public class UsersServices : IUsersServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public List<Users> GetUsersInGroup(int id)
+        {
+            var usersList = _unitOfWork.UserInGroupRepository.Get(x => x.Groupid == id, includeProperties: "User").Select(x => x.User).ToList();
+            return usersList;
+        }
 
         public List<Users> GetAwaibleUsersToGroup()
         {

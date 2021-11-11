@@ -1,5 +1,6 @@
 ﻿using inzLessons.Shared.Group;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,17 @@ namespace inzLessons.Client.Pages.GroupManagement
         protected override async Task OnInitializedAsync()
         {
             TeacherGroup = await groupServices.GetTeacherGroup();
+        }
+
+        public async void DeleteGroup(int Id)
+        {
+            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Czy napewno chcesz usunąć?");
+            if (confirmed)
+            {
+                await groupServices.DeleteGroup(Id);
+                TeacherGroup = await groupServices.GetTeacherGroup();
+                StateHasChanged();
+            }
         }
 
         public void AddNewGroup()

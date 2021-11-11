@@ -1,19 +1,42 @@
 ﻿@page "/reservation"
 
 @inject NavigationManager NavigationManager;
-@inject DialogService DialogService
+@inject DialogService DialogService;
+@inject IGroupServices groupServices;
+@inject IUserServices userServices; 
 
+@using inzLessons.Shared.Users; 
+@using inzLessons.Client.Services; 
+@using inzLessons.Shared.Group; 
 @using inzLessons.Shared.Reservation;
 
 <div class="row">
     <div class="col-xl-6">
         <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
-                         TextProperty="Description" SelectedIndex="2"
+                         TextProperty="Description" SelectedIndex="1"
                          SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
             <RadzenDayView />
             <RadzenWeekView />
             <RadzenMonthView />
         </RadzenScheduler>
+    </div>
+    <div class="col-xl-6">
+        <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                        AllowSorting="true" Data="@groupList" TItem="LessonsGroupDTO" ColumnWidth="200px"
+                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedGroupList RowClick="(item)=> { OnGroupChange(item); }" Style="margin-top:20px">
+            <Columns>
+                <RadzenDataGridColumn TItem="LessonsGroupDTO" Property="Name" Title="Nazwa grupy" />
+                <RadzenDataGridColumn TItem="LessonsGroupDTO" Property="Description" Title="Opis" />
+            </Columns>
+        </RadzenDataGrid>
+
+        <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                        AllowSorting="true" Data="@userInGroupList" TItem="UserDTO" ColumnWidth="200px"
+                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUserList>
+            <Columns>
+                <RadzenDataGridColumn TItem="UserDTO" Property="DisplayFullName" Title="Uczeń" />
+            </Columns>
+        </RadzenDataGrid>
     </div>
 </div>
 @code {

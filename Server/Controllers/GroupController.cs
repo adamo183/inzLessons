@@ -33,7 +33,23 @@ namespace inzLessons.Server.Controllers
         [HttpGet("{Id}")]
         public IActionResult DeleteGroupById(int Id)
         {
+            _groupServices.DeleteUserInGroup(Id);
+            _groupServices.DeleteGroup(Id);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("Names")]
+        public IActionResult GetGroupNames()
+        {
+            int myId = int.Parse(this.User.FindFirst("id").Value);
+            var listToRet = _groupServices.GetLessonsgroups(myId).Select(x => new LessonsGroupDTO()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description
+            }) ;
+            return Ok(listToRet);
         }
 
         [Authorize]

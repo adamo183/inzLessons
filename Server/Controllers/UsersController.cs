@@ -37,5 +37,15 @@ namespace inzLessons.Server.Controllers
             return Ok(listToRet);
         }
 
+        [Authorize]
+        [HttpGet("Group/{Id}")]
+        public IActionResult GetStudentListInGroup(int Id)
+        {
+            var listToRet = _userService.GetUsersInGroup(Id).Select(x => new UserDTO()
+            { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
+
+            return Ok(listToRet);
+        }
+
     }
 }

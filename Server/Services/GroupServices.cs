@@ -17,11 +17,34 @@ namespace inzLessons.Server.Services
         public Lessonsgroup GetGroupById(int groupId);
         public void EditGroup(Lessonsgroup groupToAdd);
         public Useringroup GetUseringroup(int groupId, int userId);
+        public void DeleteGroup(int id);
+        public void DeleteUserInGroup(int id);
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+
+        public void DeleteUserInGroup(int id)
+        {
+            var usersToDel = _unitOfWork.UserInGroupRepository.Get(x => x.Groupid == id).ToList();
+            foreach (var item in usersToDel)
+            {
+                _unitOfWork.UserInGroupRepository.Delete(item);
+                _unitOfWork.Save();
+            }
+        }
+
+        public void DeleteGroup(int id)
+        {
+            var groupToDel = _unitOfWork.LessonsGroupRepository.Get(x => x.Id == id).FirstOrDefault();
+            if (groupToDel != null)
+            {
+                _unitOfWork.LessonsGroupRepository.Delete(groupToDel);
+                _unitOfWork.Save();
+            }
+        }
 
         public Useringroup GetUseringroup(int groupId, int userId)
         {

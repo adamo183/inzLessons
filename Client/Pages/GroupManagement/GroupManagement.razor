@@ -2,7 +2,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IGroupServices groupServices;
-
+@inject IJSRuntime JsRuntime
 @using inzLessons.Client.Services;
 @using inzLessons.Shared.Group;
 
@@ -31,7 +31,7 @@
                 </div>
                 <div class="row" style="padding-left:20px">
                     <RadzenButton Text="Edytuj" Click="()=> { NavigateToGroupEdit(order.Id); }"/>
-                    <RadzenButton Text="Usuń" Style="margin-left:20px"/>
+                    <RadzenButton Text="Usuń" Click="()=> { DeleteGroup(order.Id); }" Style="margin-left:20px"/>
                 </div>
             </RadzenCard>
         <br/>
