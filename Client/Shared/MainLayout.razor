@@ -1,16 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
+    <RadzenDialog />
+    <header class="OwnHeader">
+        <NavMenu />
+    </header>
 
-<header class="OwnHeader">
-    <NavMenu />
-</header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @Body
+        </main>
+    </div>
 
-<div class="container">
-    <main role="main" class="pb-3">
-        @Body
-    </main>
-</div>
-
-<div class="OwnFooter" >
-    <p> stoopka </p>
-</div>
+    <div class="OwnFooter">
+        <p> stoopka </p>
+    </div>

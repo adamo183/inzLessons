@@ -1,13 +1,13 @@
 ﻿@page "/reservation"
 
 @inject NavigationManager NavigationManager;
-@inject DialogService DialogService;
+@inject DialogService dialogService;
 @inject IGroupServices groupServices;
-@inject IUserServices userServices; 
+@inject IUserServices userServices;
 
-@using inzLessons.Shared.Users; 
-@using inzLessons.Client.Services; 
-@using inzLessons.Shared.Group; 
+@using inzLessons.Shared.Users;
+@using inzLessons.Client.Services;
+@using inzLessons.Shared.Group;
 @using inzLessons.Shared.Reservation;
 
 <div class="row">
@@ -37,6 +37,31 @@
                 <RadzenDataGridColumn TItem="UserDTO" Property="DisplayFullName" Title="Uczeń" />
             </Columns>
         </RadzenDataGrid>
+
+        <div class="col" style="margin-top:30px;">
+            <div class="row">
+                <div class="col-lg-6">
+                    Uczeń:
+                </div>
+                @if (selectedUserList != null && selectedUserList.Count() > 1)
+                {
+                    <div class="col-lg-6">
+                        @selectedUserList.FirstOrDefault().DisplayFullName;
+                    </div>
+                }
+                </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    Godzina:
+                </div>
+                @if (selectedAppointment != null && selectedAppointment.Start != DateTime.MinValue && selectedAppointment.End != DateTime.MinValue)
+                {
+                    <div class="col-lg-6">
+                        @selectedAppointment.Start.ToShortDateString() : @selectedAppointment.Start.ToShortTimeString() - @selectedAppointment.End.ToShortTimeString()
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 @code {

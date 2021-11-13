@@ -1,4 +1,47 @@
-﻿<h3>AddReservation</h3>
+﻿@inject DialogService DialogService
+
+@using inzLessons.Shared.Reservation
+
+<RadzenTemplateForm TItem="Appointment" Data="@model" Submit=@OnSubmit>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Dzień" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Value=@model.Start DateFormat="d" TValue="DateTime" Disabled="true" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Start" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="Start" TValue="DateTime" ShowTime="true" @bind-Value="model.Start" TimeOnly="true" DateFormat="HH:mm" />
+            <RadzenRequiredValidator Text="Pole wymagane" Component="Start" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="End" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="End" TValue="DateTime" ShowTime="true" @bind-Value="model.End" TimeOnly="true" DateFormat="HH:mm" />
+            <RadzenRequiredValidator Component="End" Text="Pole wymagane" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+        </div>
+    </div>
+    @if (WrongDateError)
+    {
+        <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
+            Godzina zakończenia nie może być mniejsza nić początek!
+        </div>
+    }
+</RadzenTemplateForm>
 
 @code {
 

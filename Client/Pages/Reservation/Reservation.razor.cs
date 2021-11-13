@@ -18,6 +18,7 @@ namespace inzLessons.Client.Pages.Reservation
         IList<LessonsGroupDTO> selectedGroupList;
         List<UserDTO> userInGroupList = new List<UserDTO>();
         IList<UserDTO> selectedUserList = new List<UserDTO>();
+        Appointment selectedAppointment = new Appointment();
 
         protected override async Task OnInitializedAsync()
         {
@@ -28,8 +29,6 @@ namespace inzLessons.Client.Pages.Reservation
         {
         }
 
-
-
         async void OnGroupChange(DataGridRowMouseEventArgs<LessonsGroupDTO> user)
         {
             var selectedGroupId = user.Data.Id;
@@ -39,9 +38,16 @@ namespace inzLessons.Client.Pages.Reservation
 
         async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
         {
-            Appointment data = await DialogService.OpenAsync<AddReservation>("Add Appointment",
-            new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
+            Appointment data = await dialogService.OpenAsync<AddReservation>("Add Appointment"
+                , new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End.AddMinutes(30) } });
 
+            if (data != null)
+            {
+                selectedAppointment = data;
+                await scheduler.Reload();
+            }
+
+            StateHasChanged();
         }
 
         async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<Appointment> args)
