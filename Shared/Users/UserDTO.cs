@@ -10,8 +10,8 @@ namespace inzLessons.Shared.Users
     {
         public UserDTO() { }
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public string Name { get; set; } = "";
+        public string Surname { get; set; } = "";
         public string Username { get; set; }
         public string DisplayFullName => $"{Name} {Surname}";
     }

@@ -12,6 +12,8 @@ namespace inzLessons.Client.Services
     public interface IReservationServices
     {
         public Task<bool> AddReservationToUser(ReservationDTO reservationDTO);
+        public Task<List<ReservationDTO>> GetTeacherReservation(ReservationParams param);
+        public Task<bool> CheckTeacherHourAvaiable(ReservationParams param);
     }
 
     public class ReservationServices : IReservationServices
@@ -23,6 +25,33 @@ namespace inzLessons.Client.Services
             _http = http;
         }
 
+        public async Task<List<ReservationDTO>> GetTeacherReservation(ReservationParams param)
+        {
+            var elemToSend = JsonConvert.SerializeObject(param);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _http.PostAsync("Reservation/Teacher", content);
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ReservationDTO>>(retElem); ;
+            }
+        }
+
+        public async Task<bool> CheckTeacherHourAvaiable(ReservationParams param)
+        {
+            var elemToSend = JsonConvert.SerializeObject(param);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _http.PostAsync("Reservation/IsHourAvailable", content);
+            if (!respond.IsSuccessStatusCode)
+                return false;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return bool.Parse(retElem);
+            }
+        }
 
         public async Task<bool> AddReservationToUser(ReservationDTO reservationDTO)
         {

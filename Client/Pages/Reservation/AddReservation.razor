@@ -1,6 +1,8 @@
 ﻿@inject DialogService DialogService
+@inject IReservationServices reservationServices;
 
 @using inzLessons.Shared.Reservation
+@using inzLessons.Client.Services;
 
 <RadzenTemplateForm TItem="Appointment" Data="@model" Submit=@OnSubmit>
     <div class="row" style="margin-bottom: 16px">
@@ -39,6 +41,12 @@
     {
         <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
             Godzina zakończenia nie może być mniejsza nić początek!
+        </div>
+    }
+    @if (HourNotAvailable)
+    {
+        <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
+            W tym terminie istnieją już zarezerwowane godziny!
         </div>
     }
 </RadzenTemplateForm>

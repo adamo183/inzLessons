@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace inzLessons.Common.Models
 {
     public partial class Users
     {
         public Users()
         {
-            Reservation = new HashSet<Reservation>();
             Useringroup = new HashSet<Useringroup>();
         }
 
@@ -24,7 +25,6 @@ namespace inzLessons.Common.Models
 
         public virtual Membership IdNavigation { get; set; }
         public virtual Role Role { get; set; }
-        public virtual ICollection<Reservation> Reservation { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

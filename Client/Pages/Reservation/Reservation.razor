@@ -4,6 +4,7 @@
 @inject DialogService dialogService;
 @inject IGroupServices groupServices;
 @inject IUserServices userServices;
+@inject IReservationServices reservationServices;
 
 @using inzLessons.Shared.Users;
 @using inzLessons.Client.Services;
@@ -32,24 +33,14 @@
 
         <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
                         AllowSorting="true" Data="@userInGroupList" TItem="UserDTO" ColumnWidth="200px"
-                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUserList>
+                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUserList
+                        RowClick="(item)=> { OnUserChange(item.Data); }">
             <Columns>
                 <RadzenDataGridColumn TItem="UserDTO" Property="DisplayFullName" Title="Uczeń" />
             </Columns>
         </RadzenDataGrid>
 
         <div class="col" style="margin-top:30px;">
-            <div class="row">
-                <div class="col-lg-6">
-                    Uczeń:
-                </div>
-                @if (selectedUserList != null && selectedUserList.Count() > 1)
-                {
-                    <div class="col-lg-6">
-                        @selectedUserList.FirstOrDefault().DisplayFullName;
-                    </div>
-                }
-                </div>
             <div class="row">
                 <div class="col-lg-6">
                     Godzina:
@@ -61,6 +52,15 @@
                     </div>
                 }
             </div>
+            <div class="row" style="margin-top:15px">
+                <RadzenButton Text="Dodaj" Click="AddAppointment" />
+            </div>
+            @if (WrongDateError)
+            {
+                <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
+                    @ErrorMessage
+                </div>
+            }
         </div>
     </div>
 </div>

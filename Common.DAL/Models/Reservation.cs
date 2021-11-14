@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace inzLessons.Common.Models
 {
     public partial class Reservation
@@ -11,7 +13,8 @@ namespace inzLessons.Common.Models
         public int Userid { get; set; }
         public bool? Isonline { get; set; }
         public DateTime Reservationdate { get; set; }
+        public DateTime ReservationEndDate { get; set; }
 
-        public virtual Users User { get; set; }
+        public virtual Useringroup Useringroup { get; set; }
     }
 }

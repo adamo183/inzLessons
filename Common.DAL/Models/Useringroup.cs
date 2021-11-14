@@ -2,15 +2,23 @@
 using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace inzLessons.Common.Models
 {
     public partial class Useringroup
     {
+        public Useringroup()
+        {
+            Reservation = new HashSet<Reservation>();
+        }
+
         public int Userid { get; set; }
         public int Groupid { get; set; }
         public double? Price { get; set; }
 
         public virtual Lessonsgroup Group { get; set; }
         public virtual Users User { get; set; }
+        public virtual ICollection<Reservation> Reservation { get; set; }
     }
 }

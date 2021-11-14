@@ -6,6 +6,7 @@ using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace inzLessons.Client.Pages.Reservation
 {
@@ -19,10 +20,28 @@ namespace inzLessons.Client.Pages.Reservation
         List<UserDTO> userInGroupList = new List<UserDTO>();
         IList<UserDTO> selectedUserList = new List<UserDTO>();
         Appointment selectedAppointment = new Appointment();
+        ReservationParams param = new ReservationParams();
+        string ErrorMessage = "";
+        bool WrongDateError = false;
 
         protected override async Task OnInitializedAsync()
         {
             groupList = await groupServices.GetGroupNamesList();
+
+            var tmpDate = DateTime.Now;
+            param.Start = new DateTime(tmpDate.Year, tmpDate.Month, 1);
+            param.End = param.Start.AddMonths(1).AddDays(-1);
+
+            var appointmentsTmp = await reservationServices.GetTeacherReservation(param);
+            if (appointmentsTmp != null)
+            {
+                appointments = appointmentsTmp.Select(x => new Appointment()
+                {
+                    Start = x.Start,
+                    End = x.End,
+                    Description = x.Description
+                }).ToList();
+            }
         }
 
         void OnSlotRender()
@@ -56,6 +75,44 @@ namespace inzLessons.Client.Pages.Reservation
 
         void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Appointment> args)
         {
+        }
+
+        void OnUserChange(UserDTO userDTO)
+        {
+            selectedUserList.Clear();
+            selectedUserList.Add(userDTO);
+            StateHasChanged();
+        }
+
+        async void AddAppointment()
+        {
+            WrongDateError = false;
+            ErrorMessage = "";
+            StateHasChanged();
+
+            if (selectedAppointment == null || selectedAppointment.Start == DateTime.MinValue || selectedAppointment.End == DateTime.MinValue)
+            {
+                WrongDateError = true;
+                ErrorMessage = "Brak wybranej daty";
+                StateHasChanged();
+                return;
+            }
+
+            if (selectedGroupList == null || selectedUserList == null || selectedGroupList.Count == 0 || selectedUserList.Count == 0)
+            {
+                WrongDateError = true;
+                ErrorMessage = "Nie wybrano użytkownika";
+                StateHasChanged();
+                return;
+            }
+
+            ReservationDTO reservationToAdd = new ReservationDTO();
+            reservationToAdd.Start = selectedAppointment.Start;
+            reservationToAdd.End = selectedAppointment.End;
+            reservationToAdd.GroupId = selectedGroupList[0].Id;
+            reservationToAdd.UserId = selectedUserList[0].Id;
+            await reservationServices.AddReservationToUser(reservationToAdd);
+            NavigationManager.NavigateTo("/teacher");
         }
     }
 }

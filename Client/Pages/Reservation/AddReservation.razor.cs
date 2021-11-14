@@ -17,6 +17,7 @@ namespace inzLessons.Client.Pages.Reservation
 
         Appointment model = new Appointment();
         bool WrongDateError = false;
+        bool HourNotAvailable = false;
 
         protected override void OnParametersSet()
         {
@@ -24,8 +25,11 @@ namespace inzLessons.Client.Pages.Reservation
             model.End = End;
         }
 
-        void OnSubmit(Appointment model)
+         async void OnSubmit(Appointment model)
         {
+            HourNotAvailable = false;
+            WrongDateError = false;
+
             if (model.End < model.Start)
             {
                 WrongDateError = true;
@@ -33,6 +37,16 @@ namespace inzLessons.Client.Pages.Reservation
                 return;
             }
 
+            ReservationParams param = new ReservationParams();
+            param.End = model.End;
+            param.Start = model.Start;
+
+            if (!(await reservationServices.CheckTeacherHourAvaiable(param)))
+            {
+                HourNotAvailable = true;
+                StateHasChanged();
+                return;
+            }
             DialogService.Close(model);
         }
     }
