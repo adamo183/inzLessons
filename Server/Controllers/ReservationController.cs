@@ -31,7 +31,7 @@ namespace inzLessons.Server.Controllers
             return Ok(status);
         }
 
-            [Authorize]
+        [Authorize]
         [HttpPost("Teacher")]
         public IActionResult PostTeacherReservation(ReservationParams reservationToAdd)
         {

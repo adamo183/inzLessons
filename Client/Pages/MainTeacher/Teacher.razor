@@ -1,6 +1,16 @@
 ﻿@page "/teacher"
 
-<h3>Teacher</h3>
+@using inzLessons.Client.Services;
+
+@inject IReservationServices reservationServices;
+
+@if (reservationList != null)
+{
+    foreach (var item in reservationList)
+    {
+        <span>@item.Start - @item.End :: @item.Description </span>
+    }
+}
 
 @code {
 
