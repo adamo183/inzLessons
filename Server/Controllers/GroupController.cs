@@ -48,7 +48,7 @@ namespace inzLessons.Server.Controllers
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description
-            }) ;
+            });
             return Ok(listToRet);
         }
 
@@ -79,18 +79,25 @@ namespace inzLessons.Server.Controllers
         [HttpGet("{Id}")]
         public IActionResult GetGroupById(int Id)
         {
-            var groupList = _groupServices.GetGroupById(Id);
-            if (groupList != null)
+            try
             {
-                GroupWithUsersDTO groupToAdd = new GroupWithUsersDTO();
-                groupToAdd.Id = groupList.Id;
-                groupToAdd.Name = groupList.Name;
-                groupToAdd.Description = groupList.Description;
-                groupToAdd.UsersList = _groupServices.GetUsersInGroup(groupList.Id).Select(x => new UserDTO() { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
-                return Ok(groupToAdd);
-            }
+                var groupList = _groupServices.GetGroupById(Id);
+                if (groupList != null)
+                {
+                    GroupWithUsersDTO groupToAdd = new GroupWithUsersDTO();
+                    groupToAdd.Id = groupList.Id;
+                    groupToAdd.Name = groupList.Name;
+                    groupToAdd.Description = groupList.Description;
+                    groupToAdd.UsersList = _groupServices.GetUsersInGroup(groupList.Id).Select(x => new UserDTO() { Id = x.Id, Name = x.Firstname, Surname = x.Lastname, Username = x.Username }).ToList();
+                    return Ok(groupToAdd);
+                }
 
-            return StatusCode(500);
+                return StatusCode(500);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
         }
 
         [Authorize]

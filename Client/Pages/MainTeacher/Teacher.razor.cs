@@ -12,10 +12,11 @@ namespace inzLessons.Client.Pages.MainTeacher
 
         protected override async Task OnInitializedAsync()
         {
-            ReservationParams param = new ReservationParams();
-            param.Start = DateTime.Now;
-            param.End = param.Start.AddDays(14);
-            reservationList = await reservationServices.GetTeacherReservation(param);
+            ReservationParams reservation = new ReservationParams();
+            reservation.Start = DateTime.Now;
+            reservation.End = reservation.Start.AddDays(25);
+            reservationList = await reservationServices.GetTeacherReservation(reservation);
+            StateHasChanged();
         }
     }
 }

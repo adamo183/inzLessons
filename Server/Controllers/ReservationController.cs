@@ -32,6 +32,31 @@ namespace inzLessons.Server.Controllers
         }
 
         [Authorize]
+        [HttpPost("Student")]
+        public IActionResult PostStudentReservation(ReservationParams reservationToAdd)
+        {
+            try
+            {
+                int myId = int.Parse(this.User.FindFirst("id").Value);
+                var listToRet = _reservationServices.GetReservationsToStudent(reservationToAdd, myId)
+                    .Select(x => new ReservationDTO()
+                    {
+                        End = x.ReservationEndDate,
+                        Start = x.Reservationdate,
+                        GroupId = x.Groupid,
+                        UserId = x.Userid,
+                        IsOnline = x.Isonline.GetValueOrDefault(),
+                        Description = $"{x.Useringroup.User.Firstname} {x.Useringroup.User.Lastname}"
+                    });
+                return Ok(listToRet);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Authorize]
         [HttpPost("Teacher")]
         public IActionResult PostTeacherReservation(ReservationParams reservationToAdd)
         {

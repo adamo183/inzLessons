@@ -13,6 +13,7 @@ namespace inzLessons.Client.Services
     {
         public Task<bool> AddReservationToUser(ReservationDTO reservationDTO);
         public Task<List<ReservationDTO>> GetTeacherReservation(ReservationParams param);
+        public Task<List<ReservationDTO>> GetStudentReservation(ReservationParams param);
         public Task<bool> CheckTeacherHourAvaiable(ReservationParams param);
     }
 
@@ -23,6 +24,20 @@ namespace inzLessons.Client.Services
         public ReservationServices(HttpClient http)
         {
             _http = http;
+        }
+
+        public async Task<List<ReservationDTO>> GetStudentReservation(ReservationParams param)
+        {
+            var elemToSend = JsonConvert.SerializeObject(param);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _http.PostAsync("Reservation/Student", content);
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ReservationDTO>>(retElem); ;
+            }
         }
 
         public async Task<List<ReservationDTO>> GetTeacherReservation(ReservationParams param)

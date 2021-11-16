@@ -1,8 +1,8 @@
 ﻿@page "/teacher"
 
-@using inzLessons.Client.Services;
+@inject IReservationServices reservationServices
 
-@inject IReservationServices reservationServices;
+@using inzLessons.Client.Services;
 
 @if (reservationList != null)
 {
