@@ -23,9 +23,12 @@ namespace inzLessons.Common.Context
         public virtual DbSet<Lessoncondition> Lessoncondition { get; set; }
         public virtual DbSet<Lessonsgroup> Lessonsgroup { get; set; }
         public virtual DbSet<Membership> Membership { get; set; }
+        public virtual DbSet<Messagefile> Messagefile { get; set; }
         public virtual DbSet<Reservation> Reservation { get; set; }
+        public virtual DbSet<Reservationmessage> Reservationmessage { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Useringroup> Useringroup { get; set; }
+        public virtual DbSet<Userinreservation> Userinreservation { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -123,17 +126,31 @@ namespace inzLessons.Common.Context
                     .HasColumnName("password_salt");
             });
 
+            modelBuilder.Entity<Messagefile>(entity =>
+            {
+                entity.ToTable("messagefile");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.File).HasColumnName("file");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+            });
+
             modelBuilder.Entity<Reservation>(entity =>
             {
                 entity.ToTable("reservation");
-
-                entity.HasIndex(e => new { e.Groupid, e.Userid }, "fki_fk_reservation_usersInGroup");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .UseIdentityAlwaysColumn();
 
-                entity.Property(e => e.Groupid).HasColumnName("groupid");
+                entity.Property(e => e.Description)
+                    .HasMaxLength(256)
+                    .HasColumnName("description");
 
                 entity.Property(e => e.Isonline).HasColumnName("isonline");
 
@@ -141,13 +158,49 @@ namespace inzLessons.Common.Context
 
                 entity.Property(e => e.Reservationdate).HasColumnName("reservationdate");
 
+                entity.Property(e => e.Teacherid).HasColumnName("teacherid");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.Reservation)
+                    .HasForeignKey(d => d.Teacherid)
+                    .HasConstraintName("fk_reservation_users");
+            });
+
+            modelBuilder.Entity<Reservationmessage>(entity =>
+            {
+                entity.ToTable("reservationmessage");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Creationdate).HasColumnName("creationdate");
+
+                entity.Property(e => e.Fileid).HasColumnName("fileid");
+
+                entity.Property(e => e.Reservationid).HasColumnName("reservationid");
+
+                entity.Property(e => e.Text)
+                    .IsRequired()
+                    .HasMaxLength(1024)
+                    .HasColumnName("text");
+
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
-                entity.HasOne(d => d.Useringroup)
-                    .WithMany(p => p.Reservation)
-                    .HasForeignKey(d => new { d.Userid, d.Groupid })
+                entity.HasOne(d => d.File)
+                    .WithMany(p => p.Reservationmessage)
+                    .HasForeignKey(d => d.Fileid)
+                    .HasConstraintName("fk_reservationmessage_file");
+
+                entity.HasOne(d => d.Reservation)
+                    .WithMany(p => p.Reservationmessage)
+                    .HasForeignKey(d => d.Reservationid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_reservation_usersingroup");
+                    .HasConstraintName("fk_reservationmessage_reservation");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Reservationmessage)
+                    .HasForeignKey(d => d.Userid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_message_users");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -188,6 +241,32 @@ namespace inzLessons.Common.Context
                     .HasForeignKey(d => d.Userid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_useringroup");
+            });
+
+            modelBuilder.Entity<Userinreservation>(entity =>
+            {
+                entity.HasKey(e => new { e.Reservationid, e.Userid, e.Groupid })
+                    .HasName("userinreservation_pkey");
+
+                entity.ToTable("userinreservation");
+
+                entity.Property(e => e.Reservationid).HasColumnName("reservationid");
+
+                entity.Property(e => e.Userid).HasColumnName("userid");
+
+                entity.Property(e => e.Groupid).HasColumnName("groupid");
+
+                entity.HasOne(d => d.Reservation)
+                    .WithMany(p => p.Userinreservation)
+                    .HasForeignKey(d => d.Reservationid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_userinreservation_reservation");
+
+                entity.HasOne(d => d.Useringroup)
+                    .WithMany(p => p.Userinreservation)
+                    .HasForeignKey(d => new { d.Userid, d.Groupid })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_useringroup_userinreservation");
             });
 
             modelBuilder.Entity<Users>(entity =>

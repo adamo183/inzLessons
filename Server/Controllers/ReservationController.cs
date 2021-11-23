@@ -41,12 +41,12 @@ namespace inzLessons.Server.Controllers
                 var listToRet = _reservationServices.GetReservationsToStudent(reservationToAdd, myId)
                     .Select(x => new ReservationDTO()
                     {
+                        Id = x.Id,
                         End = x.ReservationEndDate,
                         Start = x.Reservationdate,
-                        GroupId = x.Groupid,
-                        UserId = x.Userid,
                         IsOnline = x.Isonline.GetValueOrDefault(),
-                        Description = $"{x.Useringroup.User.Firstname} {x.Useringroup.User.Lastname}"
+                        StudentName = $"{x.Userinreservation.Where(x=>x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Firstname} {x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Lastname}",
+                        Description = x.Description
                     });
                 return Ok(listToRet);
             }
@@ -66,12 +66,12 @@ namespace inzLessons.Server.Controllers
                 var listToRet = _reservationServices.GetReservationsToTeacher(reservationToAdd, myId)
                     .Select(x => new ReservationDTO()
                     {
+                        Id = x.Id,
                         End = x.ReservationEndDate,
                         Start = x.Reservationdate,
-                        GroupId = x.Groupid,
-                        UserId = x.Userid,
                         IsOnline = x.Isonline.GetValueOrDefault(),
-                        Description = $"{x.Useringroup.User.Firstname} {x.Useringroup.User.Lastname}"
+                        StudentName = $"{x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Firstname} {x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Lastname}",
+                        Description = x.Description
                     });
                 return Ok(listToRet);
             }
@@ -86,12 +86,18 @@ namespace inzLessons.Server.Controllers
         public IActionResult PostInsertReservation(ReservationDTO reservationToAdd)
         {
             Reservation reservation = new Reservation();
-            reservation.Groupid = reservationToAdd.GroupId;
-            reservation.Userid = reservationToAdd.UserId;
             reservation.Reservationdate = reservationToAdd.Start;
             reservation.ReservationEndDate = reservationToAdd.End;
             reservation.Isonline = reservationToAdd.IsOnline;
+            reservation.Teacherid = int.Parse(this.User.FindFirst("id").Value);
             _reservationServices.AddReservationToUser(reservation);
+
+            Userinreservation userinreservation = new Userinreservation();
+            userinreservation.Reservationid = reservation.Id;
+            userinreservation.Groupid = reservationToAdd.GroupId;
+            userinreservation.Userid = reservationToAdd.UserId;
+            _reservationServices.AddUserInReservation(userinreservation);
+
             return Ok();
         }
     }

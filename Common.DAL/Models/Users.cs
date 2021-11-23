@@ -10,6 +10,8 @@ namespace inzLessons.Common.Models
     {
         public Users()
         {
+            Reservation = new HashSet<Reservation>();
+            Reservationmessage = new HashSet<Reservationmessage>();
             Useringroup = new HashSet<Useringroup>();
         }
 
@@ -25,6 +27,8 @@ namespace inzLessons.Common.Models
 
         public virtual Membership IdNavigation { get; set; }
         public virtual Role Role { get; set; }
+        public virtual ICollection<Reservation> Reservation { get; set; }
+        public virtual ICollection<Reservationmessage> Reservationmessage { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

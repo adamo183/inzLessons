@@ -11,6 +11,7 @@ namespace inzLessons.Server.Services
     public interface IReservationServices
     {
         public void AddReservationToUser(Reservation reservation);
+        public void AddUserInReservation(Userinreservation userinreservation);
         public List<Reservation> GetReservationsToTeacher(ReservationParams reservationParams, int teacherId);
         public List<Reservation> GetReservationsToStudent(ReservationParams reservationParams, int studentId);
         public bool IsHourAvailableForTeacher(ReservationParams reservationParams, int teacherId);
@@ -20,10 +21,16 @@ namespace inzLessons.Server.Services
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
 
+        public void AddUserInReservation(Userinreservation userinreservation)
+        {
+            _unitOfWork.UserInReservationRepository.Insert(userinreservation);
+            _unitOfWork.Save();
+        }
+
         public List<Reservation> GetReservationsToStudent(ReservationParams reservationParams, int studentId)
         {
             var elementsToRet = _unitOfWork.ReservationRespository.Get(x => x.Reservationdate > reservationParams.Start
-               && x.ReservationEndDate < reservationParams.End && x.Userid == studentId, z => z.OrderBy(c => c.Reservationdate), "Useringroup,Useringroup.Group,Useringroup.User").ToList();
+               && x.ReservationEndDate < reservationParams.End && x.Userinreservation.Select(x=>x.Userid).ToList().Contains(studentId), z => z.OrderBy(c => c.Reservationdate), "Userinreservation,Userinreservation.Useringroup,Userinreservation,Userinreservation.Useringroup.User").ToList();
 
             return elementsToRet;
         }
@@ -31,7 +38,7 @@ namespace inzLessons.Server.Services
         public bool IsHourAvailableForTeacher(ReservationParams reservationParams, int teacherId)
         {
             var elementsToRet = _unitOfWork.ReservationRespository.Get(x=>x.Reservationdate > reservationParams.Start
-                && x.ReservationEndDate < reservationParams.End && x.Useringroup.Group.Teacherid == teacherId, includeProperties: "Useringroup,Useringroup.Group").ToList();
+                && x.ReservationEndDate < reservationParams.End && x.Teacherid == teacherId, includeProperties: "Userinreservation,Userinreservation.Useringroup,Userinreservation,Userinreservation.Useringroup.User").ToList();
             if (elementsToRet.Count() > 0)
             {
                 return false;
@@ -43,7 +50,7 @@ namespace inzLessons.Server.Services
         public List<Reservation> GetReservationsToTeacher(ReservationParams reservationParams, int teacherId)
         { 
             var elementsToRet = _unitOfWork.ReservationRespository.Get(x=>x.Reservationdate > reservationParams.Start
-                && x.ReservationEndDate < reservationParams.End && x.Useringroup.Group.Teacherid == teacherId, z=>z.OrderBy(c=>c.Reservationdate), "Useringroup,Useringroup.Group,Useringroup.User").ToList();
+                && x.ReservationEndDate < reservationParams.End && x.Teacherid == teacherId, z=>z.OrderBy(c=>c.Reservationdate), "Userinreservation,Userinreservation.Useringroup,Userinreservation,Userinreservation.Useringroup.User").ToList();
 
             return elementsToRet;
         }

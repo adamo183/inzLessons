@@ -39,7 +39,7 @@ namespace inzLessons.Client.Pages.Reservation
                 {
                     Start = x.Start,
                     End = x.End,
-                    Description = x.Description
+                    Description = x.StudentName
                 }).ToList();
             }
         }

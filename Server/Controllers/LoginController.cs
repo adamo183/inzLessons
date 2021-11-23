@@ -48,8 +48,6 @@ namespace inzLessons.Server.Controllers
         {
             try
             {
-
-
                 Membership membToAdd = new Membership();
                 membToAdd.Login = registerRequest.Login;
                 membToAdd.PasswordSalt = _userService.GenerateSalt(30);

@@ -30,7 +30,7 @@ namespace inzLessons.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("{Id}")]
+        [HttpDelete("{Id}")]
         public IActionResult DeleteGroupById(int Id)
         {
             _groupServices.DeleteUserInGroup(Id);

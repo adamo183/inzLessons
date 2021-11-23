@@ -8,13 +8,21 @@ namespace inzLessons.Common.Models
 {
     public partial class Reservation
     {
+        public Reservation()
+        {
+            Reservationmessage = new HashSet<Reservationmessage>();
+            Userinreservation = new HashSet<Userinreservation>();
+        }
+
         public int Id { get; set; }
-        public int Groupid { get; set; }
-        public int Userid { get; set; }
         public bool? Isonline { get; set; }
         public DateTime Reservationdate { get; set; }
         public DateTime ReservationEndDate { get; set; }
+        public string Description { get; set; }
+        public int? Teacherid { get; set; }
 
-        public virtual Useringroup Useringroup { get; set; }
+        public virtual Users Teacher { get; set; }
+        public virtual ICollection<Reservationmessage> Reservationmessage { get; set; }
+        public virtual ICollection<Userinreservation> Userinreservation { get; set; }
     }
 }

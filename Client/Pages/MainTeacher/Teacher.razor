@@ -1,15 +1,60 @@
 ﻿@page "/teacher"
 
 @inject IReservationServices reservationServices
+@inject IMessageServices messageServices
+@inject ILocalStorageService localStorage
 
+@using Blazored.LocalStorage
 @using inzLessons.Client.Services;
+@using inzLessons.Shared.Reservation;
 
-@if (reservationList != null)
-{
-    foreach (var item in reservationList)
+<RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                AllowSorting="true" Data="@reservationToDisplay" TItem="DisplayReservationDTO" ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedReservation>
+    <Columns>
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="Day" Title="Dzień" />
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="StartTime" Title="Początek" />
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="EndTime" Title="Koniec" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="Student" Title="Student" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="IsOnline" Title="Online" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="Description" Title="Opis" />
+    </Columns>
+</RadzenDataGrid>
+
+<div class="containerMessage">
+    @if (messageList != null && messageList.Count() > 0)
     {
-        <span>@item.Start - @item.End :: @item.Description </span>
+        foreach (var item in messageList)
+        {
+
+            @if (item.UserId != UserId)
+            {
+                <div class="message-blue">
+                    <p class="message-content">@item.Text</p>
+                    <div class="message-timestamp-left">@item.SenderUser</div>
+                </div>
+            }
+            else
+            {
+                <div class="message-orange">
+                    <p class="message-content">@item.Text</p>
+                    <div class="message-timestamp-right">@item.SenderUser</div>
+                </div>
+            }
+        }
     }
+</div>
+
+@if (_selectedReservation != null && _selectedReservation.Count() > 0)
+{
+    <div class="col" style="margin-top:50px">
+        <div class="row">
+            <RadzenTextArea Placeholder="Wiadomość..." @bind-Value="Text" Style="width:300px" @onkeyup="()=> { StateHasChanged(); }" />
+        </div>
+        <div class="row">
+            <RadzenButton Click="SendMessage" Text="Wyślij" />
+        </div>
+    </div>
 }
 
 @code {

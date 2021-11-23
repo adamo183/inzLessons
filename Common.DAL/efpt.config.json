@@ -42,6 +42,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.messagefile",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.reservationmessage",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.userinreservation",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.reservation",
          "ObjectType": 0
       }

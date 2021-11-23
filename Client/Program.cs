@@ -44,6 +44,7 @@ namespace inzLessons.Client
             builder.Services.AddScoped<IGroupServices, GroupServices>();
             builder.Services.AddScoped<ILoginServices, LoginServices>();
             builder.Services.AddScoped<IReservationServices, ReservationServices>();
+            builder.Services.AddScoped<IMessageServices, MessageServices>();
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();

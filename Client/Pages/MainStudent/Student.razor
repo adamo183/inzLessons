@@ -3,14 +3,20 @@
 @inject IReservationServices reservationServices
 
 @using inzLessons.Client.Services;
+@using inzLessons.Shared.Reservation;
 
-@if (reservationList != null)
-{
-    foreach (var item in reservationList)
-    {
-        <span>@item.Start - @item.End :: @item.Description </span>
-    }
-}
+<RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                AllowSorting="true" Data="@reservationToDisplay" TItem="DisplayReservationDTO" ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedReservation>
+    <Columns>
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="Day" Title="Dzień" />
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="StartTime" Title="Początek" />
+        <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="EndTime" Title="Koniec" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="Student" Title="Student" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="IsOnline" Title="Online" />
+        <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="Description" Title="Opis" />
+    </Columns>
+</RadzenDataGrid>
 
 @code {
 
