@@ -1,7 +1,10 @@
 ﻿@page "/student"
 
 @inject IReservationServices reservationServices
+@inject IMessageServices messageServices
+@inject ILocalStorageService localStorage
 
+@using Blazored.LocalStorage; 
 @using inzLessons.Client.Services;
 @using inzLessons.Shared.Reservation;
 
@@ -17,6 +20,40 @@
         <RadzenDataGridColumn TItem="DisplayReservationDTO" Property="Description" Title="Opis" />
     </Columns>
 </RadzenDataGrid>
+
+<div class="containerMessage">
+    @if (messageList != null && messageList.Count() > 0)
+    {
+        foreach (var item in messageList)
+        {
+            @if (item.UserId != UserId)
+            {
+                <div class="message-blue">
+                    <p class="message-content">@item.Text</p>
+                    <div class="message-timestamp-left">@item.SenderUser</div>
+                </div>
+            }
+            else
+            {
+                <div class="message-orange">
+                    <p class="message-content">@item.Text</p>
+                    <div class="message-timestamp-right">@item.SenderUser</div>
+                </div>
+            }
+        }
+    }
+</div>
+@if (_selectedReservation != null && _selectedReservation.Count() > 0)
+{
+    <div class="col" style="margin-top:50px">
+        <div class="row">
+            <RadzenTextArea Placeholder="Wiadomość..." @bind-Value="Text" Style="width:300px" @onkeyup="()=> { StateHasChanged(); }" />
+        </div>
+        <div class="row">
+            <RadzenButton Click="SendMessage" Text="Wyślij" />
+        </div>
+    </div>
+}
 
 @code {
 

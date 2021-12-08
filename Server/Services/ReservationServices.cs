@@ -29,8 +29,10 @@ namespace inzLessons.Server.Services
 
         public List<Reservation> GetReservationsToStudent(ReservationParams reservationParams, int studentId)
         {
+            var reservationListIds = _unitOfWork.UserInReservationRepository.Get(x => x.Userid == studentId).Select(x=>x.Reservationid).ToList();
+
             var elementsToRet = _unitOfWork.ReservationRespository.Get(x => x.Reservationdate > reservationParams.Start
-               && x.ReservationEndDate < reservationParams.End && x.Userinreservation.Select(x=>x.Userid).ToList().Contains(studentId), z => z.OrderBy(c => c.Reservationdate), "Userinreservation,Userinreservation.Useringroup,Userinreservation,Userinreservation.Useringroup.User").ToList();
+               && x.ReservationEndDate < reservationParams.End &&  reservationListIds.Contains(x.Id), z => z.OrderBy(c => c.Reservationdate), "Userinreservation,Userinreservation.Useringroup,Userinreservation,Userinreservation.Useringroup.User").ToList();
 
             return elementsToRet;
         }

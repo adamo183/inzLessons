@@ -1,4 +1,5 @@
-﻿using System;
+﻿using inzLessons.Shared.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,10 @@ namespace inzLessons.Shared.Reservation
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Description { get; set; }
-        public int UserId { get; set; }
+        public List<int> UserIds { get; set; }
         public int GroupId { get; set; }
         public bool IsOnline { get; set; }
-        public string StudentName { get; set; }
+        public List<UserDTO> Students { get; set; }
         public ReservationDTO() { }
     }
 }

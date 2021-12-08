@@ -18,12 +18,13 @@ namespace inzLessons.Client.Pages.Reservation
         List<LessonsGroupDTO> groupList = new List<LessonsGroupDTO>();
         IList<LessonsGroupDTO> selectedGroupList;
         List<UserDTO> userInGroupList = new List<UserDTO>();
-        IList<UserDTO> selectedUserList = new List<UserDTO>();
+        private IList<UserDTO> selectedUserList = new List<UserDTO>();
         Appointment selectedAppointment = new Appointment();
         ReservationParams param = new ReservationParams();
         string ErrorMessage = "";
-        bool WrongDateError = false;
-
+        public bool WrongDateError = false;
+        private bool _isWholeGroup = false;
+        private bool _isEditableUserList = true;
         protected override async Task OnInitializedAsync()
         {
             groupList = await groupServices.GetGroupNamesList();
@@ -39,9 +40,11 @@ namespace inzLessons.Client.Pages.Reservation
                 {
                     Start = x.Start,
                     End = x.End,
-                    Description = x.StudentName
+                    Description = String.Join(",", x.Students.Select(x => x.DisplayFullName).ToArray()),
                 }).ToList();
             }
+            _isWholeGroup = false;
+            StateHasChanged();
         }
 
         void OnSlotRender()
@@ -110,7 +113,7 @@ namespace inzLessons.Client.Pages.Reservation
             reservationToAdd.Start = selectedAppointment.Start;
             reservationToAdd.End = selectedAppointment.End;
             reservationToAdd.GroupId = selectedGroupList[0].Id;
-            reservationToAdd.UserId = selectedUserList[0].Id;
+            reservationToAdd.UserIds = selectedUserList.Select(x=>x.Id).ToList();
             await reservationServices.AddReservationToUser(reservationToAdd);
             NavigationManager.NavigateTo("/teacher");
         }

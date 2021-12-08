@@ -9,8 +9,8 @@
 @using inzLessons.Shared.Reservation;
 
 <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
-                AllowSorting="true" Data="@reservationToDisplay" TItem="DisplayReservationDTO" ColumnWidth="200px"
-                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedReservation>
+                AllowSorting="true" Data="@reservationToDisplay" TItem="DisplayReservationDTO" ColumnWidth="300px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedReservation AllowColumnReorder="true" AllowColumnResize="true">
     <Columns>
         <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="Day" Title="Dzień" />
         <RadzenDataGridColumn Width="100px" TItem="DisplayReservationDTO" Property="StartTime" Title="Początek" />
@@ -30,15 +30,28 @@
             @if (item.UserId != UserId)
             {
                 <div class="message-blue">
-                    <p class="message-content">@item.Text</p>
+                    <p class="message-content">
+                        @item.Text
+                        @if (item.File != null)
+                        {
+                            <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" />
+                        }
+                    </p>
                     <div class="message-timestamp-left">@item.SenderUser</div>
                 </div>
             }
             else
             {
                 <div class="message-orange">
-                    <p class="message-content">@item.Text</p>
+                    <p class="message-content">
+                        @item.Text
+                        @if (item.File != null)
+                        {
+                            <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" />
+                        }
+                    </p>
                     <div class="message-timestamp-right">@item.SenderUser</div>
+
                 </div>
             }
         }
@@ -47,12 +60,23 @@
 
 @if (_selectedReservation != null && _selectedReservation.Count() > 0)
 {
-    <div class="col" style="margin-top:50px">
-        <div class="row">
-            <RadzenTextArea Placeholder="Wiadomość..." @bind-Value="Text" Style="width:300px" @onkeyup="()=> { StateHasChanged(); }" />
+    <div class="row">
+        <div class="col" style="margin-top:50px">
+            <div class="row">
+                <div class="col-6">
+                    <RadzenTextArea Placeholder="Wiadomość..." @bind-Value="Text" Style="width:300px" @onkeyup="()=> { StateHasChanged(); }" />
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px">
+                <RadzenButton Click="SendMessage" Text="Wyślij" />
+            </div>
         </div>
-        <div class="row">
-            <RadzenButton Click="SendMessage" Text="Wyślij" />
+        <div class="col" style="margin-top:50px">
+            Dodaj załącznik:
+            <RadzenFileInput @bind-Value=@message.File Style="width:400px" TValue="byte[]" />
+            <div class="row" style="margin-top: 20px">
+                <RadzenButton Click="SendMessageFile" Text="Wyślij" />
+            </div>
         </div>
     </div>
 }

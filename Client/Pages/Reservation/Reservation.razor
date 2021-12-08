@@ -33,10 +33,10 @@
 
         <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
                         AllowSorting="true" Data="@userInGroupList" TItem="UserDTO" ColumnWidth="200px"
-                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUserList
-                        RowClick="(item)=> { OnUserChange(item.Data); }">
+                        SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedUserList
+                        RowClick="(item)=> { OnUserChange(item.Data); }"  >
             <Columns>
-                <RadzenDataGridColumn TItem="UserDTO" Property="DisplayFullName" Title="Uczeń" />
+                <RadzenDataGridColumn TItem="UserDTO" Property="DisplayFullName" Title="Uczeń"  />
             </Columns>
         </RadzenDataGrid>
 

@@ -45,7 +45,13 @@ namespace inzLessons.Server.Controllers
                         End = x.ReservationEndDate,
                         Start = x.Reservationdate,
                         IsOnline = x.Isonline.GetValueOrDefault(),
-                        StudentName = $"{x.Userinreservation.Where(x=>x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Firstname} {x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Lastname}",
+                        Students = x.Userinreservation.Select(z => new Shared.Users.UserDTO()
+                        {
+                            Id = z.Userid,
+                            Name = z.Useringroup.User.Firstname,
+                            Surname = z.Useringroup.User.Lastname,
+                            Username = z.Useringroup.User.Username,
+                        }).ToList(),
                         Description = x.Description
                     });
                 return Ok(listToRet);
@@ -70,7 +76,13 @@ namespace inzLessons.Server.Controllers
                         End = x.ReservationEndDate,
                         Start = x.Reservationdate,
                         IsOnline = x.Isonline.GetValueOrDefault(),
-                        StudentName = $"{x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Firstname} {x.Userinreservation.Where(x => x.Useringroup.Userid == myId).FirstOrDefault().Useringroup.User.Lastname}",
+                        Students = x.Userinreservation.Select(z => new Shared.Users.UserDTO() 
+                        {
+                            Id = z.Userid,
+                            Name = z.Useringroup.User.Firstname,
+                            Surname = z.Useringroup.User.Lastname,
+                            Username = z.Useringroup.User.Username,
+                        }).ToList(),
                         Description = x.Description
                     });
                 return Ok(listToRet);
@@ -92,12 +104,15 @@ namespace inzLessons.Server.Controllers
             reservation.Teacherid = int.Parse(this.User.FindFirst("id").Value);
             _reservationServices.AddReservationToUser(reservation);
 
-            Userinreservation userinreservation = new Userinreservation();
-            userinreservation.Reservationid = reservation.Id;
-            userinreservation.Groupid = reservationToAdd.GroupId;
-            userinreservation.Userid = reservationToAdd.UserId;
-            _reservationServices.AddUserInReservation(userinreservation);
-
+            foreach (var item in reservationToAdd.UserIds)
+            {
+                Userinreservation userinreservation = new Userinreservation();
+                userinreservation.Reservationid = reservation.Id;
+                userinreservation.Groupid = reservationToAdd.GroupId;
+                userinreservation.Userid = item;
+                _reservationServices.AddUserInReservation(userinreservation);
+            }
+            
             return Ok();
         }
     }
