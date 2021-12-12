@@ -11,8 +11,9 @@ namespace inzLessons.Common.Models
         public int Id { get; set; }
         public DateTime Reservationdatestart { get; set; }
         public DateTime Reservationdateend { get; set; }
-        public int Groupid { get; set; }
+        public int Teacherid { get; set; }
+        public int? MaxHourPerStudent { get; set; }
 
-        public virtual Lessonsgroup Group { get; set; }
+        public virtual Users Teacher { get; set; }
     }
 }

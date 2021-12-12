@@ -1,14 +1,18 @@
 ﻿using inzLessons.Shared.Message;
 using inzLessons.Shared.Reservation;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace inzLessons.Client.Pages.MainStudent
 {
     public partial class Student
     {
+
+        MessageDTO message = new MessageDTO();
         List<ReservationDTO> reservationList = new List<ReservationDTO>();
         IEnumerable<DisplayReservationDTO> reservationToDisplay = new List<DisplayReservationDTO>();
         public IList<DisplayReservationDTO> selectedReservation
@@ -35,6 +39,24 @@ namespace inzLessons.Client.Pages.MainStudent
         {
             messageList = await messageServices.GetMessageInReservation(id);
             StateHasChanged();
+        }
+
+        public async void SendMessageFile()
+        {
+            if (message.File != null && message.File.Length > 0)
+            {
+                message.Text = "Dodano załącznik " + message.FileName;
+                message.ReservationId = selectedReservation.FirstOrDefault().Id;
+                message.FileName = "tmp";
+                var status = await messageServices.InsertMessageInReservation(message);
+                message.File = null;
+                message.FileName = null;
+                if (status)
+                {
+                    messageList = await messageServices.GetMessageInReservation(message.ReservationId);
+                }
+                StateHasChanged();
+            }
         }
 
         protected override async Task OnInitializedAsync()
@@ -75,6 +97,25 @@ namespace inzLessons.Client.Pages.MainStudent
                 }
                 StateHasChanged();
             }
-        }   
+        }
+
+        public void DownloadFile(byte[] fileToDownload, string name)
+        {
+            BlazorDownloadFileService.DownloadFile(name, fileToDownload, "application/octet-stream");
+        }
+
+        private async Task OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            long maxFileSize = 1024 * 1024 * 15;
+            var upload = false;
+
+            using var content = new MultipartFormDataContent();
+
+            var fileToRead = e.GetMultipleFiles().FirstOrDefault();
+
+            var fileContent = new StreamContent(fileToRead.OpenReadStream(maxFileSize));
+            message.File = await fileContent.ReadAsByteArrayAsync();
+            message.FileName = e.File.Name;
+        }
     }
 }

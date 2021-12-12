@@ -1,0 +1,19 @@
+﻿@page "/AllowedReservationTeacher"
+
+@inject DialogService DialogService
+@inject IAllowedReservationServices allowedReservationServices
+
+@using inzLessons.Client.Services; 
+@using inzLessons.Shared.AllowedReservation;
+
+<RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="AllowedReservationDTO" Data=@appointments StartProperty="StartTime" EndProperty="EndTime"
+                 TextProperty="TeacherName"  AppointmentRender=@OnAppointmentRender SelectedIndex="1" 
+                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect>
+    <RadzenDayView />
+    <RadzenWeekView />
+    <RadzenMonthView />
+</RadzenScheduler>
+
+@code {
+
+}

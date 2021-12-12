@@ -3,7 +3,10 @@
 @inject IReservationServices reservationServices
 @inject IMessageServices messageServices
 @inject ILocalStorageService localStorage
+@inject IJSRuntime jsRuntime
+@inject IBlazorDownloadFileService BlazorDownloadFileService
 
+@using BlazorDownloadFile;
 @using Blazored.LocalStorage
 @using inzLessons.Client.Services;
 @using inzLessons.Shared.Reservation;
@@ -30,28 +33,31 @@
             @if (item.UserId != UserId)
             {
                 <div class="message-blue">
-                    <p class="message-content">
+                    <p class="message-content" style="float: left;margin-left: 10px">
                         @item.Text
-                        @if (item.File != null)
-                        {
-                            <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" />
-                        }
                     </p>
+                    @if (item.File != null)
+                    {
+                        <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" Style="margin-left: 10px; background-color: #A8DDFD;" Click="(()=> DownloadFile(item.File, item.FileName))" />
+                    }
                     <div class="message-timestamp-left">@item.SenderUser</div>
                 </div>
             }
             else
             {
                 <div class="message-orange">
-                    <p class="message-content">
-                        @item.Text
-                        @if (item.File != null)
-                        {
-                            <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" />
-                        }
-                    </p>
+                    <div class="row">
+                        <span>
+                            @if (item.File != null)
+                            {
+                                <RadzenButton Icon="file_download" ButtonStyle="ButtonStyle.Light" Style="margin-left: 10px; background-color: #f8e896;" Click="(()=> DownloadFile(item.File, item.FileName))" />
+                            }
+                            <p class="message-content" style="float:right;margin-left:10px">
+                                @item.Text
+                            </p>
+                        </span>
+                    </div>
                     <div class="message-timestamp-right">@item.SenderUser</div>
-
                 </div>
             }
         }
@@ -73,7 +79,7 @@
         </div>
         <div class="col" style="margin-top:50px">
             Dodaj załącznik:
-            <RadzenFileInput @bind-Value=@message.File Style="width:400px" TValue="byte[]" />
+            <InputFile OnChange="OnInputFileChange" />
             <div class="row" style="margin-top: 20px">
                 <RadzenButton Click="SendMessageFile" Text="Wyślij" />
             </div>

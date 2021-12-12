@@ -27,7 +27,7 @@ namespace inzLessons.Server.Controllers
         public IActionResult GetReservationMessage(int id)
         {
             var messageList = _messageServices.GetMessageToReservation(id);
-            var messageToRet = messageList.Select(x => new MessageDTO() { Id = x.Id, File = x.File == null ? null : x.File.File, ReservationId = x.Reservationid, Text = x.Text, UserId = x.Userid, SenderUser = x.User.Firstname + " " + x.User.Lastname }).ToList();
+            var messageToRet = messageList.Select(x => new MessageDTO() { Id = x.Id, File = x.File == null ? null : x.File.File, FileName = x.File == null ? null : x.File.Name, ReservationId = x.Reservationid, Text = x.Text, UserId = x.Userid, SenderUser = x.User.Firstname + " " + x.User.Lastname }).ToList();
             return Ok(messageToRet);
         }
 

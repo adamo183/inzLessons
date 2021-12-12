@@ -52,17 +52,17 @@ namespace inzLessons.Common.Context
                     .HasColumnName("id")
                     .UseIdentityAlwaysColumn();
 
-                entity.Property(e => e.Groupid).HasColumnName("groupid");
-
                 entity.Property(e => e.Reservationdateend).HasColumnName("reservationdateend");
 
                 entity.Property(e => e.Reservationdatestart).HasColumnName("reservationdatestart");
 
-                entity.HasOne(d => d.Group)
+                entity.Property(e => e.Teacherid).HasColumnName("teacherid");
+
+                entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Allowedreservation)
-                    .HasForeignKey(d => d.Groupid)
+                    .HasForeignKey(d => d.Teacherid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_allowedreservation_group");
+                    .HasConstraintName("fk_allowedreservation_user");
             });
 
             modelBuilder.Entity<Lessoncondition>(entity =>

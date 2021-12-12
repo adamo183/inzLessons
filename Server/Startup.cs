@@ -90,6 +90,7 @@ namespace inzLessons.Server
             services.AddScoped<IGroupServices, GroupServices>();
             services.AddScoped<IReservationServices, ReservationServices>();
             services.AddScoped<IMessageServices, MessageServices>();
+            services.AddScoped<IAllowedReservationServices, AllowedReservationServices>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

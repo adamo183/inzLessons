@@ -10,7 +10,6 @@ namespace inzLessons.Common.Models
     {
         public Lessonsgroup()
         {
-            Allowedreservation = new HashSet<Allowedreservation>();
             Useringroup = new HashSet<Useringroup>();
         }
 
@@ -20,7 +19,6 @@ namespace inzLessons.Common.Models
         public int Teacherid { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<Allowedreservation> Allowedreservation { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

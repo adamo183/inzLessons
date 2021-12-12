@@ -80,6 +80,8 @@ navbarClass {
 .containerMessage {
     width: 400px;
     padding: 10px;
+    height: 400px;
+    overflow-y: scroll;
 }
 
 .message-blue {
@@ -89,7 +91,7 @@ navbarClass {
     padding: 10px;
     background-color: #A8DDFD;
     width: 200px;
-    height: 50px;
+    overflow-wrap: break-word;
     text-align: left;
     font: 400 .9em 'Open Sans', sans-serif;
     border: 1px solid #97C6E3;
@@ -103,7 +105,7 @@ navbarClass {
     padding: 10px;
     background-color: #f8e896;
     width: 200px;
-    height: 50px;
+    overflow-wrap: break-word;
     text-align: left;
     font: 400 .9em 'Open Sans', sans-serif;
     border: 1px solid #dfd087;
@@ -113,22 +115,23 @@ navbarClass {
 .message-content {
     padding: 0;
     margin: 0;
+    word-break: break-word;
 }
 
 .message-timestamp-right {
     position: absolute;
     font-size: .85em;
     font-weight: 300;
-    bottom: 5px;
-    right: 5px;
+    bottom: 0px;
+    right: 20px;
 }
 
 .message-timestamp-left {
     position: absolute;
     font-size: .85em;
     font-weight: 300;
-    bottom: 5px;
-    left: 5px;
+    bottom: 0px;
+    left: 20px;
 }
 
 .message-blue:after {

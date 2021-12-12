@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Radzen;
+using BlazorDownloadFile;
 
 namespace inzLessons.Client
 {
@@ -40,11 +41,13 @@ namespace inzLessons.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthServices>();
             builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthServices>());
+            builder.Services.AddBlazorDownloadFile();
             builder.Services.AddScoped<IUserServices, UserServices>();
             builder.Services.AddScoped<IGroupServices, GroupServices>();
             builder.Services.AddScoped<ILoginServices, LoginServices>();
             builder.Services.AddScoped<IReservationServices, ReservationServices>();
             builder.Services.AddScoped<IMessageServices, MessageServices>();
+            builder.Services.AddScoped<IAllowedReservationServices, AllowedReservationServices>();
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();

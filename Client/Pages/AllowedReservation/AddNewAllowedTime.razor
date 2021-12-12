@@ -1,0 +1,64 @@
+﻿@inject DialogService DialogService
+@inject IAllowedReservationServices allowedReservationServices
+
+@using inzLessons.Shared.AllowedReservation; 
+@using inzLessons.Client.Services;
+ 
+<RadzenTemplateForm TItem="AllowedReservationDTO" Data="@model" Submit=@OnSubmit>
+    <div class="row" style="margi n-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Dzień" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Value=@model.StartTime DateFormat="d" TValue="DateTime" Disabled="true" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Start" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="Start" TValue="DateTime" ShowTime="true" @bind-Value="model.StartTime" TimeOnly="true" DateFormat="HH:mm" />
+            <RadzenRequiredValidator Text="Pole wymagane" Component="Start" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Koniec" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="End" TValue="DateTime" ShowTime="true" @bind-Value="model.EndTime" TimeOnly="true" DateFormat="HH:mm" />
+            <RadzenRequiredValidator Component="End" Text="Pole wymagane" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Maksymalny czas pojedynczych zajęć" />
+        </div>
+        <div class="col">
+            <RadzenNumeric TValue="int" @bind-Value="@model.MaxLessonTimePerStudent" Class="w-50" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+        </div>
+    </div>
+    @if (WrongDateError)
+    {
+        <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
+            Godzina zakończenia nie może być mniejsza nić początek!
+        </div>
+    }
+    @if (HourNotAvailable)
+    {
+        <div class="row alert alert-danger" role="alert" style="margin-top:15px;">
+            W tym terminie istnieją już zarezerwowane godziny!
+        </div>
+    }
+</RadzenTemplateForm>
+
+@code {
+
+}

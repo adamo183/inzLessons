@@ -15,6 +15,11 @@
                             <span class="oi oi-home" aria-hidden="true"></span> Moje zajęcia
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/AllowedReservationStudent" Match="NavLinkMatch.All">
+                            <span class="oi oi-home" aria-hidden="true"></span> Rezerwacja zajęć
+                        </NavLink>
+                    </li>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView Roles="Teacher">
@@ -32,6 +37,11 @@
                     <li>
                         <NavLink class="nav-link text-dark" href="/groupManagement" Match="NavLinkMatch.All">
                             <span class="oi oi-home" aria-hidden="true"></span> Moje grupy
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/AllowedReservationTeacher" Match="NavLinkMatch.All">
+                            <span class="oi oi-home" aria-hidden="true"></span> Moje dostępne godziny
                         </NavLink>
                     </li>
                 </Authorized>
