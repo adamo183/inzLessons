@@ -16,6 +16,8 @@
         <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="Appointment" Data=@appointments StartProperty="Start" EndProperty="End"
                          TextProperty="Description" SelectedIndex="2"
                          SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender >
+            <RadzenDayView />
+            <RadzenWeekView />
             <RadzenMonthView />
         </RadzenScheduler>
     </div>

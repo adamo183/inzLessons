@@ -1,6 +1,7 @@
 ﻿using inzLessons.Common.Models;
 using inzLessons.Server.Services;
 using inzLessons.Shared.Reservation;
+using inzLessons.Shared.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,10 +17,27 @@ namespace inzLessons.Server.Controllers
     public class ReservationController : ControllerBase
     {
         private IReservationServices _reservationServices;
+        private IGroupServices _groupServices;
 
-        public ReservationController(IReservationServices reservationServices)
+        public ReservationController(IReservationServices reservationServices, IGroupServices groupServices)
         {
             _reservationServices = reservationServices;
+            _groupServices = groupServices;
+        }
+
+        [Authorize]
+        [HttpGet("StudentTeacher")]
+        public IActionResult GetStudentTeacher()
+        {
+            int myId = int.Parse(this.User.FindFirst("id").Value);
+            var userGroup = _groupServices.GetStudentTeacher(myId).Select(x => new UserDTO()
+            {
+                Id = x.Id,
+                Name = x.Firstname,
+                Surname = x.Lastname,
+                Username = x.Username
+            });
+            return Ok(userGroup);
         }
 
         [Authorize]
@@ -76,7 +94,7 @@ namespace inzLessons.Server.Controllers
                         End = x.ReservationEndDate,
                         Start = x.Reservationdate,
                         IsOnline = x.Isonline.GetValueOrDefault(),
-                        Students = x.Userinreservation.Select(z => new Shared.Users.UserDTO() 
+                        Students = x.Userinreservation.Select(z => new Shared.Users.UserDTO()
                         {
                             Id = z.Userid,
                             Name = z.Useringroup.User.Firstname,
@@ -112,7 +130,7 @@ namespace inzLessons.Server.Controllers
                 userinreservation.Userid = item;
                 _reservationServices.AddUserInReservation(userinreservation);
             }
-            
+
             return Ok();
         }
     }

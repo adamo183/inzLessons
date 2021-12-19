@@ -23,6 +23,7 @@ namespace Common.DAL.UnitOfWork
         private GenericRepository<Reservationmessage> _reservationMessage;
         private GenericRepository<Messagefile> _messageFile;
         private GenericRepository<Userinreservation> _userInReservation;
+        private GenericRepository<Reservationrequest> _reservationRequest;
 
         public GenericRepository<Reservation> ReservationRespository => _reservation ?? new GenericRepository<Reservation>(context);
         public GenericRepository<Useringroup> UserInGroupRepository => _userInGroup ?? new GenericRepository<Useringroup>(context);
@@ -35,6 +36,7 @@ namespace Common.DAL.UnitOfWork
         public GenericRepository<Reservationmessage> MessageRepository => _reservationMessage ?? new GenericRepository<Reservationmessage>(context);
         public GenericRepository<Messagefile> MessageFileRepository => _messageFile ?? new GenericRepository<Messagefile>(context);
         public GenericRepository<Userinreservation> UserInReservationRepository => _userInReservation ?? new GenericRepository<Userinreservation>(context);
+        public GenericRepository<Reservationrequest> ReservationRequestRepository => _reservationRequest ?? new GenericRepository<Reservationrequest>(context);
         public void Save()
         {
             context.SaveChanges();

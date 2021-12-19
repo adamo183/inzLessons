@@ -8,6 +8,11 @@ namespace inzLessons.Common.Models
 {
     public partial class Allowedreservation
     {
+        public Allowedreservation()
+        {
+            Reservationrequest = new HashSet<Reservationrequest>();
+        }
+
         public int Id { get; set; }
         public DateTime Reservationdatestart { get; set; }
         public DateTime Reservationdateend { get; set; }
@@ -15,5 +20,6 @@ namespace inzLessons.Common.Models
         public int? MaxHourPerStudent { get; set; }
 
         public virtual Users Teacher { get; set; }
+        public virtual ICollection<Reservationrequest> Reservationrequest { get; set; }
     }
 }

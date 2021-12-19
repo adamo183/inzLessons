@@ -38,6 +38,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.reservationrequest",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.messagefile",
          "ObjectType": 0
       },

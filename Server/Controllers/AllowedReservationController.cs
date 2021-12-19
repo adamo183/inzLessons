@@ -1,6 +1,7 @@
 ﻿using inzLessons.Common.Models;
 using inzLessons.Server.Services;
 using inzLessons.Shared.AllowedReservation;
+using inzLessons.Shared.ReservationRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,66 @@ namespace inzLessons.Server.Controllers
         public AllowedReservationController(IAllowedReservationServices allowedReservationServices)
         {
             _allowedReservationServices = allowedReservationServices;
+        }
+
+        [Authorize]
+        [HttpPost("Request")]
+        public IActionResult PostAddReservationRequest(ReservationRequestDTO reservationrequest)
+        {
+            Reservationrequest requToAdd = new Reservationrequest();
+            requToAdd.Userid = reservationrequest.UserId;
+            requToAdd.Allowedreservationid = reservationrequest.AllowedReservationId;
+            requToAdd.Description = reservationrequest.Description;
+            requToAdd.Starttime = reservationrequest.StartTime;
+            requToAdd.Endtime = reservationrequest.EndTime;
+            requToAdd.Isaccepted = false;
+            _allowedReservationServices.AddReservationRequest(requToAdd);
+            return Ok(true);
+        }
+
+        [Authorize]
+        [HttpGet("UserRequest")]
+        public IActionResult GetReservationRequestToUser()
+        {
+            try {
+                var teacherId = int.Parse(User.FindFirst("id").Value);
+                var listToRet = _allowedReservationServices.GetReservationrequestsToUser(teacherId)
+                    .Select(x => new ReservationRequestDTO()
+                    {
+                        AllowedReservationId = x.Allowedreservationid.GetValueOrDefault(),
+                        Description = x.Description,
+                        EndTime = x.Endtime,
+                        StartTime = x.Endtime,
+                        TeacherName = x.Allowedreservation.Teacher.Firstname + " " + x.Allowedreservation.Teacher.Lastname,
+                        StudentName = x.User.Firstname + " " + x.User.Lastname,
+                        TeacherId = x.Allowedreservation.Teacherid,
+                        UserId = x.Userid.GetValueOrDefault()
+                    });
+
+                return Ok(listToRet);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+        [Authorize]
+        [HttpGet("Teacher/{Id}")]
+        public IActionResult GetAllowedReservationToTeacherById(int Id)
+        {
+            var modelList = _allowedReservationServices.GetAllowedreservationsToTeacher(Id).Select(
+                x => new AllowedReservationDTO()
+                {
+                    Id = x.Id,
+                    EndTime = x.Reservationdateend,
+                    StartTime = x.Reservationdatestart,
+                    MaxLessonTimePerStudent = x.MaxHourPerStudent.HasValue ? x.MaxHourPerStudent.GetValueOrDefault() : 1,
+                    TeacherId = x.Teacherid,
+                    TeacherName = x.Teacher.Firstname + " " + x.Teacher.Lastname
+                });
+            return Ok(modelList);
         }
 
         [Authorize]

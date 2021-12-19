@@ -42,6 +42,8 @@ namespace inzLessons.Client.Pages.Reservation
             param.End = model.End;
             param.Start = model.Start;
 
+            param.End = new DateTime(param.Start.Year, param.Start.Month, param.Start.Day, param.End.Hour, param.End.Minute, param.End.Second);
+
             if (!(await reservationServices.CheckTeacherHourAvaiable(param)))
             {
                 HourNotAvailable = true;

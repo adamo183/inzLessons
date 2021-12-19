@@ -15,11 +15,34 @@ namespace inzLessons.Server.Services
         public List<Allowedreservation> GetAllowedreservationsToTeacher(int userId);
         public Allowedreservation GetAllowedreservationById(int allowResId);
         public void EditAllowedreservation(Allowedreservation allowRes);
+        public void AddReservationRequest(Reservationrequest resReq);
+        public List<Reservationrequest> GetReservationrequestsToUser(int userId);
     }
 
     public class AllowedReservationServices : IAllowedReservationServices
     {
         private UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public List<Reservationrequest> GetReservationrequestsToUser(int userId)
+        {
+            var listToRet = _unitOfWork.ReservationRequestRepository.Get(x => x.Userid == userId && x.Isaccepted == false
+            , includeProperties: "Allowedreservation,Allowedreservation.Teacher,User").ToList();
+            return listToRet;
+        }
+
+        public void AddReservationRequest(Reservationrequest resReq)
+        {
+            _unitOfWork.ReservationRequestRepository.Insert(resReq);
+            _unitOfWork.Save();
+        }
+
+        public List<Reservationrequest> GetReservationRequestToTeacher(ReservationRequestParam param)
+        {
+            var listToRet = _unitOfWork.ReservationRequestRepository.Get(x => x.Allowedreservation.Teacherid == param.TeacherId
+            && x.Starttime > param.Start
+            && x.Endtime < param.End, includeProperties: "Allowedreservation").ToList();
+            return listToRet;
+        }
 
         public void EditAllowedreservation(Allowedreservation allowRes)
         {

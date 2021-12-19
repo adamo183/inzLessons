@@ -1,4 +1,5 @@
 ﻿using inzLessons.Shared.Reservation;
+using inzLessons.Shared.Users;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace inzLessons.Client.Services
         public Task<List<ReservationDTO>> GetTeacherReservation(ReservationParams param);
         public Task<List<ReservationDTO>> GetStudentReservation(ReservationParams param);
         public Task<bool> CheckTeacherHourAvaiable(ReservationParams param);
+        public Task<List<UserDTO>> GetStudentTeacher();
     }
 
     public class ReservationServices : IReservationServices
@@ -26,6 +28,17 @@ namespace inzLessons.Client.Services
             _http = http;
         }
 
+        public async Task<List<UserDTO>> GetStudentTeacher()
+        {
+            var respond = await _http.GetAsync("Reservation/StudentTeacher");
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<UserDTO>>(retElem); ;
+            }
+        }
         public async Task<List<ReservationDTO>> GetStudentReservation(ReservationParams param)
         {
             var elemToSend = JsonConvert.SerializeObject(param);

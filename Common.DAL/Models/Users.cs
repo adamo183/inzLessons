@@ -13,6 +13,7 @@ namespace inzLessons.Common.Models
             Allowedreservation = new HashSet<Allowedreservation>();
             Reservation = new HashSet<Reservation>();
             Reservationmessage = new HashSet<Reservationmessage>();
+            Reservationrequest = new HashSet<Reservationrequest>();
             Useringroup = new HashSet<Useringroup>();
         }
 
@@ -31,6 +32,7 @@ namespace inzLessons.Common.Models
         public virtual ICollection<Allowedreservation> Allowedreservation { get; set; }
         public virtual ICollection<Reservation> Reservation { get; set; }
         public virtual ICollection<Reservationmessage> Reservationmessage { get; set; }
+        public virtual ICollection<Reservationrequest> Reservationrequest { get; set; }
         public virtual ICollection<Useringroup> Useringroup { get; set; }
     }
 }

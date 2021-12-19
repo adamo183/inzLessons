@@ -26,6 +26,7 @@ namespace inzLessons.Common.Context
         public virtual DbSet<Messagefile> Messagefile { get; set; }
         public virtual DbSet<Reservation> Reservation { get; set; }
         public virtual DbSet<Reservationmessage> Reservationmessage { get; set; }
+        public virtual DbSet<Reservationrequest> Reservationrequest { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Useringroup> Useringroup { get; set; }
         public virtual DbSet<Userinreservation> Userinreservation { get; set; }
@@ -201,6 +202,43 @@ namespace inzLessons.Common.Context
                     .HasForeignKey(d => d.Userid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_message_users");
+            });
+
+            modelBuilder.Entity<Reservationrequest>(entity =>
+            {
+                entity.ToTable("reservationrequest");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Allowedreservationid).HasColumnName("allowedreservationid");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(255)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.Endtime)
+                    .HasColumnType("date")
+                    .HasColumnName("endtime");
+
+                entity.Property(e => e.Isaccepted).HasColumnName("isaccepted");
+
+                entity.Property(e => e.Starttime)
+                    .HasColumnType("date")
+                    .HasColumnName("starttime");
+
+                entity.Property(e => e.Userid).HasColumnName("userid");
+
+                entity.HasOne(d => d.Allowedreservation)
+                    .WithMany(p => p.Reservationrequest)
+                    .HasForeignKey(d => d.Allowedreservationid)
+                    .HasConstraintName("fk_reservationrequest_allowedres");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Reservationrequest)
+                    .HasForeignKey(d => d.Userid)
+                    .HasConstraintName("fk_reservationrequest_student");
             });
 
             modelBuilder.Entity<Role>(entity =>

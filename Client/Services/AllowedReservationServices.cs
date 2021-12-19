@@ -1,4 +1,5 @@
 ﻿using inzLessons.Shared.AllowedReservation;
+using inzLessons.Shared.ReservationRequest;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,11 @@ namespace inzLessons.Client.Services
         public Task<bool> CheckAllowedReservationAvailable(AllowedReservationDTO model);
         public Task<bool> AddAllowedTeacherHours(AllowedReservationDTO allowedReservationDTO);
         public Task<bool> EditAllowedTeacherHours(AllowedReservationDTO allowedReservationDTO);
+        public Task<bool> AddReservationRequest(ReservationRequestDTO request);
         public Task<List<AllowedReservationDTO>> GetAllowedReservationsToTeacher();
         public Task<List<AllowedReservationDTO>> GetAllowedReservationsToStudent();
+        public Task<List<AllowedReservationDTO>> GetAllowedReservationsByTeacherId(int id);
+        public Task<List<ReservationRequestDTO>> GetStudentReservationRequest();
     }
 
     public class AllowedReservationServices : IAllowedReservationServices
@@ -25,6 +29,27 @@ namespace inzLessons.Client.Services
         public AllowedReservationServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        public async Task<List<ReservationRequestDTO>> GetStudentReservationRequest()
+        {
+            var respond = await _httpClient.GetAsync("AllowedReservation/StudentRequest");
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ReservationRequestDTO>>(retElem);
+            }
+        }
+
+        public async Task<bool> AddReservationRequest(ReservationRequestDTO request)
+        {
+            var elemToSend = JsonConvert.SerializeObject(request);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _httpClient.PostAsync("AllowedReservation/Request", content);
+            var status = await respond.Content.ReadAsStringAsync();
+            return bool.Parse(status);
         }
 
         public async Task<bool> EditAllowedTeacherHours(AllowedReservationDTO allowedReservationDTO)
@@ -59,6 +84,19 @@ namespace inzLessons.Client.Services
                 return JsonConvert.DeserializeObject<List<AllowedReservationDTO>>(retElem);
             }
         }
+
+        public async Task<List<AllowedReservationDTO>> GetAllowedReservationsByTeacherId(int id)
+        {
+            var respond = await _httpClient.GetAsync("AllowedReservation/Teacher/" + id);
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<AllowedReservationDTO>>(retElem);
+            }
+        }
+
 
         public async Task<bool> AddAllowedTeacherHours(AllowedReservationDTO allowedReservationDTO)
         {
