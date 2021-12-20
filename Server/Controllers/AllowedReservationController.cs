@@ -63,7 +63,6 @@ namespace inzLessons.Server.Controllers
             {
                 return StatusCode(500);
             }
-
         }
 
         [Authorize]

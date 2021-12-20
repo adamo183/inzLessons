@@ -33,7 +33,7 @@ namespace inzLessons.Client.Services
 
         public async Task<List<ReservationRequestDTO>> GetStudentReservationRequest()
         {
-            var respond = await _httpClient.GetAsync("AllowedReservation/StudentRequest");
+            var respond = await _httpClient.GetAsync("AllowedReservation/UserRequest");
             if (!respond.IsSuccessStatusCode)
                 return null;
             else

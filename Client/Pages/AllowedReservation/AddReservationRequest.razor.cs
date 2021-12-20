@@ -62,7 +62,6 @@ namespace inzLessons.Client.Pages.AllowedReservation
             requestDTO.AllowedReservationId = AllowedHourId;
             var status = allowedReservationServices.AddReservationRequest(requestDTO);
             DialogService.Close(model);
-
         }
 
     }

@@ -4,23 +4,47 @@
 @inject IAllowedReservationServices allowedReservationServices
 @inject IReservationServices reservationServices
 
+@using inzLessons.Shared.ReservationRequest;
 @using inzLessons.Client.Services;
 @using inzLessons.Shared.AllowedReservation;
-@using inzLessons.Shared.Users; 
+@using inzLessons.Shared.Users;
 
-<div class="row" style="width: 300px;margin-bottom: 30px">
-    <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" TextProperty="DisplayFullName"
-                    Data=@(teacherList.Select(c => c.DisplayFullName).Distinct())
-                    Value="SelectedTeacher" Change="(args)=> { OnTeacherChange(args); }"/>
-</div>
 <div class="row">
-    <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="AllowedReservationDTO" Data=@appointments StartProperty="StartTime" EndProperty="EndTime"
-                     TextProperty="TeacherName" SelectedIndex="1"
-                     AppointmentSelect=@OnAppointmentSelect>
-        <RadzenDayView />
-        <RadzenWeekView />
-        <RadzenMonthView />
-    </RadzenScheduler>
+    <div class="col-6">
+        <div class="row" style="width: 300px;margin-bottom: 30px">
+            <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" TextProperty="DisplayFullName"
+                            Data=@(teacherList.Select(c => c.DisplayFullName).Distinct())
+                            Value="SelectedTeacher" Change="(args)=> { OnTeacherChange(args); }" />
+        </div>
+        <div class="row">
+            <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="AllowedReservationDTO" Data=@appointments StartProperty="StartTime" EndProperty="EndTime"
+                             TextProperty="TeacherName" SelectedIndex="1"
+                             AppointmentSelect=@OnAppointmentSelect>
+                <RadzenDayView />
+                <RadzenWeekView />
+                <RadzenMonthView />
+            </RadzenScheduler>
+        </div>
+    </div>
+    <div class="col-6">
+
+        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@reservationRequest" TItem="ReservationRequestDTO" PageSize="5">
+            <Template Context="request">
+                <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                @request.TeacherName
+                            </div>
+                            <div class="col-lg-6">
+                                @request.StartTime.ToShortDateString() - @request.StartTime.ToShortTimeString() -  @request.EndTime.ToShortTimeString()
+                            </div>
+                        </div>
+                        </div>
+                </RadzenCard>
+            </Template>
+        </RadzenDataList>
+    </div>
 </div>
 @code {
 

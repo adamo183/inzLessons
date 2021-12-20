@@ -218,15 +218,11 @@ namespace inzLessons.Common.Context
                     .HasMaxLength(255)
                     .HasColumnName("description");
 
-                entity.Property(e => e.Endtime)
-                    .HasColumnType("date")
-                    .HasColumnName("endtime");
+                entity.Property(e => e.Endtime).HasColumnName("endtime");
 
                 entity.Property(e => e.Isaccepted).HasColumnName("isaccepted");
 
-                entity.Property(e => e.Starttime)
-                    .HasColumnType("date")
-                    .HasColumnName("starttime");
+                entity.Property(e => e.Starttime).HasColumnName("starttime");
 
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
