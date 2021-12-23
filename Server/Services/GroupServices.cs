@@ -20,11 +20,19 @@ namespace inzLessons.Server.Services
         public void DeleteGroup(int id);
         public void DeleteUserInGroup(int id);
         public List<Users> GetStudentTeacher(int studentId);
+        public int GetGroupWithStudentAndUser(int teacherId, int studentId);
     }
 
     public class GroupServices : IGroupServices
     {
         UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public int GetGroupWithStudentAndUser(int teacherId, int studentId)
+        {
+            var userGroup = _unitOfWork.UserInGroupRepository.Get(x => x.Userid == studentId, includeProperties: "Group").Select(x=>x.Groupid).ToList();
+            var groupList = _unitOfWork.LessonsGroupRepository.Get(x => userGroup.Contains(x.Id) && x.Teacherid == teacherId).FirstOrDefault();
+            return groupList.Id;
+        }
 
         public List<Users> GetStudentTeacher(int studentId)
         {

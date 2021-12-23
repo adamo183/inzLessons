@@ -39,6 +39,9 @@
                             <div class="col-lg-6">
                                 @request.StartTime.ToShortDateString() - @request.StartTime.ToShortTimeString() -  @request.EndTime.ToShortTimeString()
                             </div>
+                            <div class="col-lg-3">
+                                <RadzenButton Text="Anuluj" Click="()=> { RejectRequest(request); }" />
+                            </div>
                         </div>
                         </div>
                 </RadzenCard>

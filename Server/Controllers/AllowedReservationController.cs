@@ -17,10 +17,73 @@ namespace inzLessons.Server.Controllers
     public class AllowedReservationController : ControllerBase
     {
         private IAllowedReservationServices _allowedReservationServices;
+        private IReservationServices _reservationServices;
+        private IGroupServices _groupServices;
 
-        public AllowedReservationController(IAllowedReservationServices allowedReservationServices)
+        public AllowedReservationController(IAllowedReservationServices allowedReservationServices, IReservationServices reservationServices, IGroupServices groupServices)
         {
             _allowedReservationServices = allowedReservationServices;
+            _reservationServices = reservationServices;
+            _groupServices = groupServices;
+        }
+
+        [Authorize]
+        [HttpPut("AcceptRequest")]
+        public IActionResult PutAcceptRequest(ReservationRequestDTO request)
+        {
+            _allowedReservationServices.AcceptReservationRequestById(request.Id);
+            Reservation reservation = new Reservation();
+            reservation.Isonline = false;
+            reservation.Reservationdate = request.StartTime;
+            reservation.ReservationEndDate = request.EndTime;
+            reservation.Description = "";
+            reservation.Teacherid = int.Parse(User.FindFirst("id").Value);
+            _reservationServices.AddReservationToUser(reservation);
+
+            int reservationId = reservation.Id;
+            Userinreservation userinreservation = new Userinreservation();
+            userinreservation.Reservationid = reservationId;
+            userinreservation.Userid = request.UserId;
+            userinreservation.Groupid = _groupServices.GetGroupWithStudentAndUser(request.TeacherId, request.UserId);
+            _reservationServices.AddUserInReservation(userinreservation);
+            return Ok(true);
+        }
+
+        [Authorize]
+        [HttpPut("RejectRequest")]
+        public IActionResult PutRejecttRequest(ReservationRequestDTO request)
+        {
+            _allowedReservationServices.RejectReservationRequestById(request.Id);
+            return Ok(true);
+        }
+
+        [Authorize]
+        [HttpGet("TeacherRequest")]
+        public IActionResult GetReservationRequestToTeacher()
+        {
+            try
+            {
+                var teacherId = int.Parse(User.FindFirst("id").Value);
+                var listToRet = _allowedReservationServices.GetReservationrequestsToTeacher(teacherId)
+                    .Select(x => new ReservationRequestDTO()
+                    {
+                        AllowedReservationId = x.Allowedreservationid.GetValueOrDefault(),
+                        Description = x.Description,
+                        EndTime = x.Endtime,
+                        StartTime = x.Starttime,
+                        TeacherName = x.Allowedreservation.Teacher.Firstname + " " + x.Allowedreservation.Teacher.Lastname,
+                        StudentName = x.User.Firstname + " " + x.User.Lastname,
+                        TeacherId = x.Allowedreservation.Teacherid,
+                        UserId = x.Userid.GetValueOrDefault(),
+                        Id = x.Id
+                    });
+
+                return Ok(listToRet);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
         }
 
         [Authorize]
@@ -50,11 +113,12 @@ namespace inzLessons.Server.Controllers
                         AllowedReservationId = x.Allowedreservationid.GetValueOrDefault(),
                         Description = x.Description,
                         EndTime = x.Endtime,
-                        StartTime = x.Endtime,
+                        StartTime = x.Starttime,
                         TeacherName = x.Allowedreservation.Teacher.Firstname + " " + x.Allowedreservation.Teacher.Lastname,
                         StudentName = x.User.Firstname + " " + x.User.Lastname,
                         TeacherId = x.Allowedreservation.Teacherid,
-                        UserId = x.Userid.GetValueOrDefault()
+                        UserId = x.Userid.GetValueOrDefault(),
+                        Id = x.Id
                     });
 
                 return Ok(listToRet);

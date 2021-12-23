@@ -1,4 +1,5 @@
 ﻿using inzLessons.Shared.AllowedReservation;
+using inzLessons.Shared.ReservationRequest;
 using Radzen;
 using Radzen.Blazor;
 using System;
@@ -12,10 +13,11 @@ namespace inzLessons.Client.Pages.AllowedReservation
     {
         RadzenScheduler<AllowedReservationDTO> scheduler = new RadzenScheduler<AllowedReservationDTO>();
         IList<AllowedReservationDTO> appointments = new List<AllowedReservationDTO>();
-
+        List<ReservationRequestDTO> teacherAllowedReservation = new List<ReservationRequestDTO>();
         protected override async Task OnInitializedAsync()
         {
             appointments = await allowedReservationServices.GetAllowedReservationsToTeacher();
+            teacherAllowedReservation = await allowedReservationServices.GetTeacherReservationRequest();
             StateHasChanged();
         }
 
@@ -53,6 +55,21 @@ namespace inzLessons.Client.Pages.AllowedReservation
 
                 await scheduler.Reload();
             }
+        }
+
+        public async void AcceptRequest(ReservationRequestDTO request)
+        {
+            await allowedReservationServices.AcceptLessonRequest(request);
+            teacherAllowedReservation = await allowedReservationServices.GetTeacherReservationRequest();
+            StateHasChanged();
+
+        }
+
+        public async void RejectRequest(ReservationRequestDTO request)
+        {
+            await allowedReservationServices.RejectLessonRequest(request);
+            teacherAllowedReservation = await allowedReservationServices.GetTeacherReservationRequest();
+            StateHasChanged();
         }
     }
 }

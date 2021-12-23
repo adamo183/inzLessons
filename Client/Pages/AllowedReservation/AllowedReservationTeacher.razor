@@ -3,17 +3,45 @@
 @inject DialogService DialogService
 @inject IAllowedReservationServices allowedReservationServices
 
-@using inzLessons.Client.Services; 
+@using inzLessons.Client.Services;
 @using inzLessons.Shared.AllowedReservation;
+@using inzLessons.Shared.ReservationRequest;
+ 
+<div class="row">
+    <div class="col-6">
+        <RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="AllowedReservationDTO" Data=@appointments StartProperty="StartTime" EndProperty="EndTime"
+                         TextProperty="TeacherName" AppointmentRender=@OnAppointmentRender SelectedIndex="1"
+                         SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect>
+            <RadzenDayView />
+            <RadzenWeekView />
+            <RadzenMonthView />
+        </RadzenScheduler>
+    </div>
+    <div class="col-6">
+        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@teacherAllowedReservation" TItem="ReservationRequestDTO" PageSize="5">
+            <Template Context="request">
+                <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                @request.StudentName
+                            </div>
+                            <div class="col-lg-4">
+                                @request.StartTime.ToShortDateString() - @request.StartTime.ToShortTimeString() -  @request.EndTime.ToShortTimeString()
+                            </div>
+                            <div class="col-lg-3">
+                                <RadzenButton Text="Akcektuj" Click="()=> { AcceptRequest(request); }" />
+                            </div>
+                            <div class="col-lg-3">
+                                <RadzenButton Text="Odrzuć" Click="()=> { RejectRequest(request); }" />
+                            </div>
+                        </div>
+                    </div>
+                </RadzenCard>
+            </Template>
+        </RadzenDataList>
+    </div>
+    </div>
+    @code {
 
-<RadzenScheduler @ref=@scheduler style="height: 768px;" TItem="AllowedReservationDTO" Data=@appointments StartProperty="StartTime" EndProperty="EndTime"
-                 TextProperty="TeacherName"  AppointmentRender=@OnAppointmentRender SelectedIndex="1" 
-                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect>
-    <RadzenDayView />
-    <RadzenWeekView />
-    <RadzenMonthView />
-</RadzenScheduler>
-
-@code {
-
-}
+    }

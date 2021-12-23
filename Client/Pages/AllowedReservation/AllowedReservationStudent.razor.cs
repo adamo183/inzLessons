@@ -72,8 +72,18 @@ namespace inzLessons.Client.Pages.AllowedReservation
 
             if (data != null)
             {
+
                 await scheduler.Reload();
+                reservationRequest = await allowedReservationServices.GetStudentReservationRequest();
+                StateHasChanged();
             }
+        }
+
+        public async void RejectRequest(ReservationRequestDTO request)
+        {
+            await allowedReservationServices.RejectLessonRequest(request);
+            reservationRequest = await allowedReservationServices.GetStudentReservationRequest();
+            StateHasChanged();
         }
     }
 }

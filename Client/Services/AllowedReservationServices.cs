@@ -20,6 +20,9 @@ namespace inzLessons.Client.Services
         public Task<List<AllowedReservationDTO>> GetAllowedReservationsToStudent();
         public Task<List<AllowedReservationDTO>> GetAllowedReservationsByTeacherId(int id);
         public Task<List<ReservationRequestDTO>> GetStudentReservationRequest();
+        public Task<List<ReservationRequestDTO>> GetTeacherReservationRequest();
+        public Task<bool> AcceptLessonRequest(ReservationRequestDTO requestDTO);
+        public Task<bool> RejectLessonRequest(ReservationRequestDTO requestDTO);
     }
 
     public class AllowedReservationServices : IAllowedReservationServices
@@ -29,6 +32,36 @@ namespace inzLessons.Client.Services
         public AllowedReservationServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        public async Task<bool> AcceptLessonRequest(ReservationRequestDTO requestDTO)
+        {
+            var elemToSend = JsonConvert.SerializeObject(requestDTO);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _httpClient.PutAsync("AllowedReservation/AcceptRequest", content);
+            var status = await respond.Content.ReadAsStringAsync();
+            return bool.Parse(status);
+        }
+
+        public async Task<bool> RejectLessonRequest(ReservationRequestDTO requestDTO)
+        {
+            var elemToSend = JsonConvert.SerializeObject(requestDTO);
+            var content = new StringContent(elemToSend, Encoding.UTF8, "application/json");
+            var respond = await _httpClient.PutAsync("AllowedReservation/RejectRequest", content);
+            var status = await respond.Content.ReadAsStringAsync();
+            return bool.Parse(status);
+        }
+
+        public async Task<List<ReservationRequestDTO>> GetTeacherReservationRequest()
+        {
+            var respond = await _httpClient.GetAsync("AllowedReservation/TeacherRequest");
+            if (!respond.IsSuccessStatusCode)
+                return null;
+            else
+            {
+                string retElem = await respond.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ReservationRequestDTO>>(retElem);
+            }
         }
 
         public async Task<List<ReservationRequestDTO>> GetStudentReservationRequest()

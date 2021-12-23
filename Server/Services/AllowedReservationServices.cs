@@ -17,11 +17,44 @@ namespace inzLessons.Server.Services
         public void EditAllowedreservation(Allowedreservation allowRes);
         public void AddReservationRequest(Reservationrequest resReq);
         public List<Reservationrequest> GetReservationrequestsToUser(int userId);
+        public List<Reservationrequest> GetReservationrequestsToTeacher(int teacherId);
+        public void AcceptReservationRequestById(int id);
+        public void RejectReservationRequestById(int id);
     }
 
     public class AllowedReservationServices : IAllowedReservationServices
     {
         private UnitOfWork _unitOfWork = new UnitOfWork();
+
+        public void AcceptReservationRequestById(int id)
+        {
+            var requestToAccept = _unitOfWork.ReservationRequestRepository.Get(x => x.Id == id).FirstOrDefault();
+            if (requestToAccept != null)
+            {
+                requestToAccept.Isaccepted = true;
+                _unitOfWork.ReservationRequestRepository.Update(requestToAccept);
+                _unitOfWork.Save();
+            }
+        }
+
+        public void RejectReservationRequestById(int id)
+        {
+            var requestToAccept = _unitOfWork.ReservationRequestRepository.Get(x => x.Id == id).FirstOrDefault();
+            if (requestToAccept != null)
+            {
+                requestToAccept.Isaccepted = true;
+                _unitOfWork.ReservationRequestRepository.Update(requestToAccept);
+                _unitOfWork.Save(); 
+            }
+        }
+
+        public List<Reservationrequest> GetReservationrequestsToTeacher(int teacherId)
+        {
+            var teacherAllowedReservationList = _unitOfWork.AllowedReservationRepository.Get(x => x.Teacherid == teacherId).Select(x => x.Id).ToList();
+            var reservationRequestList = _unitOfWork.ReservationRequestRepository.Get(x => teacherAllowedReservationList.Contains(x.Allowedreservationid.GetValueOrDefault()) && x.Isaccepted == false
+            , includeProperties: "Allowedreservation,Allowedreservation.Teacher,User").ToList();
+            return reservationRequestList;
+        }
 
         public List<Reservationrequest> GetReservationrequestsToUser(int userId)
         {
